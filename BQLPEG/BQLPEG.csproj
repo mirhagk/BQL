@@ -45,6 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GrammarPartial.cs" />
+    <Compile Include="Nodes\ConstraintNode.cs" />
+    <Compile Include="Nodes\CreateTableNode.cs" />
+    <Compile Include="Nodes\FieldNode.cs" />
+    <Compile Include="Nodes\Node.cs" />
+    <Compile Include="Nodes\StatementNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -53,6 +59,7 @@
     <PegGrammar Include="Grammar.peg" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Pegasus.3.1.0\build\Pegasus.targets" Condition="Exists('..\packages\Pegasus.3.1.0\build\Pegasus.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
