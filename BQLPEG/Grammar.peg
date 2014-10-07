@@ -34,9 +34,9 @@ columnItemList = columnItem<1,,comma>
 columnItem = projectionRef / columnSource (AS? Id)?
 columnSource = aggregate / Id
 aggregate = aggregateName "(" aggregateArg ")"
-agrregateArg = expression / "*"
+aggregateArg = expression / "*"
 aggregateName = COUNT / "AVG" / "MIN" / "MAX" / "STDEV" / "STDEVP" / "SUM" / "VAR" / "VARP"
-fromClause = FROM idList joinChain?
+fromClause = FROM idlist joinChain?
 joinChain = joinKind? JOIN idlist ON Id "=" Id
 joinKind = "INNER" / "LEFT" "OUTER"? / "RIGHT" "OUTER"?
 whereClause = "WHERE" expression
@@ -46,13 +46,13 @@ orderClause = "ORDER" BY orderList
 projectionDecl = PROJECTION Id_simple "(" selList ")"
 projectionRef = "<" Id_simple ">" / Id_simple dot "<" Id_simple ">"
 exprList = expression<1,,comma>
-expression = term / unExpr / binExpr // | betweenExpr // BETWEEN doesn't work - yet; 
+expression -memoize = term / unExpr / binExpr // | betweenExpr // BETWEEN doesn't work - yet; 
 term = Id / string_literal / number / funCall / tuple / parSelectStmt
 tuple = "(" exprList ")"
 parSelectStmt = "(" selectStmt ")"
 unExpr = unOp term
 unOp = NOT / "+" / "-" / "~"
-binExpr  = expression binOp expression
+binExpr -memoize = expression binOp expression
 binOp = "+" / "-" / "*" / "/" / "%" / "&" / "|" / "^" / "=" / ">" / "<" / ">=" / "<>" / "!=" / "!<" / "!>" / "AND" / "OR" / "LIKE" / NOT "LIKE" / "IN" / NOT "IN"
 betweenExpr = expression NOT? "BETWEEN" expression "AND" expression
 // funCall covers some psedo-operators and special forms like ANY(...), SOME(...), ALL(...), EXISTS(...), IN(...)
@@ -61,7 +61,39 @@ funArgs = selectStmt / exprList
 inStmt = expression "IN" "(" exprList ")"
 
 
-Id_simple = [A-Z] / "[" [A-Z] "]" / ["] [A-Z] ["]
-
+//Terminals
+dot = "."
+comma = ","
+Id_simple = [A-Z]+ / "[" [A-Z]* "]" / ["] [A-Z]* ["]
+number = [0-9]+ "."? [0-9]*
+string_literal = "'" ([^'] / '') "'"
 
 //Keywords
+CREATE = "CREATE"
+TABLE = "TABLE"
+NULL = "NULL"
+NOT = "NOT"
+CONSTRAINT = "CONSTRAINT"
+PRIMARY = "PRIMARY"
+KEY = "KEY"
+UNIQUE = "UNIQUE"
+INDEX = "INDEX"
+ON = "ON"
+WITH = "WITH"
+ALTER = "ALTER"
+ADD = "ADD"
+COLUMN = "COLUMN"
+DROP = "DROP"
+INSERT = "INSERT"
+INTO = "INTO"
+VALUES = "VALUES"
+UPDATE = "UPDATE"
+SET = "SET"
+DELETE = "DELETE"
+FROM = "FROM"
+SELECT = "SELECT"
+AS = "AS"
+COUNT = "COUNT"
+JOIN = "JOIN"
+BY = "BY"
+PROJECTION = "PROJECTION"
