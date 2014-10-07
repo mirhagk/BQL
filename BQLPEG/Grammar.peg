@@ -1,0 +1,67 @@
+﻿Root = stmtList
+stmtLine = stmt + ";"?
+stmtList = stmtLine+
+Id = Id_simple<1,,dot>
+stmt = createTableStmt / createIndexStmt / alterStmt / dropTableStmt / dropIndexStmt / selectStmt / insertStmt / updateStmt / deleteStmt / projectionDecl / "GO"
+createTableStmt = CREATE TABLE Id "(" fieldDefList ")" constraintListOpt
+fieldDefList = fieldDef<1,,comma>
+fieldDef = Id typeName typeParams? (NULL / NOT NULL)?
+typeName = "BIT" / "DATE" / "TIME" / "TIMESTAMP" / "DECIMAL" / "REAL" / "FLOAT" / "SMALLINT" / "INTEGER" / "INTERVAL" / "CHARACTER" / "DATETIME" / "INT" / "DOUBLE" / "CHAR" / "NCHAR" / "VARCHAR" / "NVARCHAR" / "IMAGE" / "TEXT" / "NTEXT"
+typeParams = "(" number ")" / "(" number comma number ")"
+constraintDef = CONSTRAINT Id constraintTypeOpt
+constraintListOpt = constraintDef*
+constraintTypeOpt = PRIMARY KEY idlistPar / UNIQUE idlistPar / NOT NULL idlistPar / "FOREIGN" KEY idlistPar "REFERENCES" Id idlistPar
+idlistPar = "(" idlist ")"
+idlist = Id<1,,comma>
+createIndexStmt = CREATE UNIQUE? INDEX Id ON Id orderList withClause?
+orderList = orderMember<1,,comma>
+orderMember = Id ("ASC"/"DESC")?
+withClause = WITH PRIMARY / WITH "DISALLOW" NULL / WITH "IGNORE" NULL
+alterStmt = ALTER TABLE Id alterCmd
+alterCmd = ADD COLUMN fieldDefList constraintListOpt / ADD constraintDef / DROP COLUMN Id / DROP CONSTRAINT Id
+dropTableStmt = DROP TABLE Id
+dropIndexStmt = DROP INDEX Id ON Id
+insertStmt = INSERT INTO? Id idlistPar insertData
+insertData = selectStmt / VALUES "(" exprList ")"
+updateStmt = UPDATE Id SET assignList whereClause?
+assignList = assignment<1,,comma>
+assignment = Id "=" expression
+deleteStmt = DELETE FROM Id whereClause?
+selectStmt = selectClause fromClause? whereClause? groupClause? havingClause? orderClause? / fromClause whereClause? groupClause?  havingClause? orderClause? selectClause
+selectClause = SELECT ("ALL"/"DISTINCT")? selList (INTO Id)?
+selList = columnItemList / "*"
+columnItemList = columnItem<1,,comma>
+columnItem = projectionRef / columnSource (AS? Id)?
+columnSource = aggregate / Id
+aggregate = aggregateName "(" aggregateArg ")"
+agrregateArg = expression / "*"
+aggregateName = COUNT / "AVG" / "MIN" / "MAX" / "STDEV" / "STDEVP" / "SUM" / "VAR" / "VARP"
+fromClause = FROM idList joinChain?
+joinChain = joinKind? JOIN idlist ON Id "=" Id
+joinKind = "INNER" / "LEFT" "OUTER"? / "RIGHT" "OUTER"?
+whereClause = "WHERE" expression
+groupClause = "GROUP" BY idlist
+havingClause = "HAVING" expression
+orderClause = "ORDER" BY orderList
+projectionDecl = PROJECTION Id_simple "(" selList ")"
+projectionRef = "<" Id_simple ">" / Id_simple dot "<" Id_simple ">"
+exprList = expression<1,,comma>
+expression = term / unExpr / binExpr // | betweenExpr // BETWEEN doesn't work - yet; 
+term = Id / string_literal / number / funCall / tuple / parSelectStmt
+tuple = "(" exprList ")"
+parSelectStmt = "(" selectStmt ")"
+unExpr = unOp term
+unOp = NOT / "+" / "-" / "~"
+binExpr  = expression binOp expression
+binOp = "+" / "-" / "*" / "/" / "%" / "&" / "|" / "^" / "=" / ">" / "<" / ">=" / "<>" / "!=" / "!<" / "!>" / "AND" / "OR" / "LIKE" / NOT "LIKE" / "IN" / NOT "IN"
+betweenExpr = expression NOT? "BETWEEN" expression "AND" expression
+// funCall covers some psedo-operators and special forms like ANY(...), SOME(...), ALL(...), EXISTS(...), IN(...)
+funCall = Id "(" funArgs ")"
+funArgs = selectStmt / exprList
+inStmt = expression "IN" "(" exprList ")"
+
+
+Id_simple = [A-Z] / "[" [A-Z] "]" / ["] [A-Z] ["]
+
+
+//Keywords
