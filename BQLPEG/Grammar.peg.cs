@@ -444,15 +444,15 @@ namespace
                     if (r3 != null)
                     {
                         IParseResult<bool> r5 = null;
-                        var nullStart = cursor;
+                        var nullvalStart = cursor;
                         r5 = this.nullOpt(ref cursor);
-                        var nullEnd = cursor;
-                        var @null = ValueOrDefault(r5);
+                        var nullvalEnd = cursor;
+                        var nullval = ValueOrDefault(r5);
                         if (r5 != null)
                         {
                             r0 = this.ReturnHelper<FieldNode>(startCursor0, ref cursor, state =>
                                 #line 11 "Grammar.peg"
-                                                                                new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=null??true}
+                                                                                   new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=nullval}
                                 #line default
                                 );
                         }
@@ -685,65 +685,82 @@ namespace
         {
             IParseResult<bool> r0 = null;
             var startCursor0 = cursor;
-            var l0 = new List<string>();
+            IParseResult<IList<bool>> r1 = null;
+            var valStart = cursor;
+            var startCursor1 = cursor;
+            var l0 = new List<bool>();
             while (l0.Count < 1)
             {
-                IParseResult<string> r1 = null;
-                if (r1 == null)
-                {
-                    var startCursor1 = cursor;
-                    IParseResult<string> r2 = null;
-                    r2 = this.NULL(ref cursor);
-                    if (r2 != null)
-                    {
-                        r1 = this.ReturnHelper<string>(startCursor1, ref cursor, state =>
-                            #line 14 "Grammar.peg"
-                        true
-                            #line default
-                            );
-                    }
-                    else
-                    {
-                        cursor = startCursor1;
-                    }
-                }
-                if (r1 == null)
+                IParseResult<bool> r2 = null;
+                if (r2 == null)
                 {
                     var startCursor2 = cursor;
                     IParseResult<string> r3 = null;
-                    r3 = this.NOT(ref cursor);
+                    r3 = this.NULL(ref cursor);
                     if (r3 != null)
                     {
-                        IParseResult<string> r4 = null;
-                        r4 = this.NULL(ref cursor);
-                        if (r4 != null)
-                        {
-                            r1 = this.ReturnHelper<string>(startCursor2, ref cursor, state =>
-                                #line 14 "Grammar.peg"
-                                        false
-                                #line default
-                                );
-                        }
-                        else
-                        {
-                            cursor = startCursor2;
-                        }
+                        r2 = this.ReturnHelper<bool>(startCursor2, ref cursor, state =>
+                            #line 14 "Grammar.peg"
+                                  true
+                            #line default
+                            );
                     }
                     else
                     {
                         cursor = startCursor2;
                     }
                 }
-                if (r1 != null)
+                if (r2 == null)
                 {
-                    l0.Add(r1.Value);
+                    var startCursor3 = cursor;
+                    IParseResult<string> r4 = null;
+                    r4 = this.NOT(ref cursor);
+                    if (r4 != null)
+                    {
+                        IParseResult<string> r5 = null;
+                        r5 = this.NULL(ref cursor);
+                        if (r5 != null)
+                        {
+                            r2 = this.ReturnHelper<bool>(startCursor3, ref cursor, state =>
+                                #line 14 "Grammar.peg"
+                                                  false
+                                #line default
+                                );
+                        }
+                        else
+                        {
+                            cursor = startCursor3;
+                        }
+                    }
+                    else
+                    {
+                        cursor = startCursor3;
+                    }
+                }
+                if (r2 != null)
+                {
+                    l0.Add(r2.Value);
                 }
                 else
                 {
                     break;
                 }
             }
-            r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state => l0.AsReadOnly());
+            r1 = this.ReturnHelper<IList<bool>>(startCursor1, ref cursor, state => l0.AsReadOnly());
+            var valEnd = cursor;
+            var val = ValueOrDefault(r1);
+            if (r1 != null)
+            {
+                r0 = this.ReturnHelper<bool>(startCursor0, ref cursor, state =>
+                    #line 14 "Grammar.peg"
+                                                            val.SingleOrDefault()
+                    #line default
+                    );
+            }
+            else
+            {
+                cursor = startCursor0;
+            }
             return r0;
         }
 
