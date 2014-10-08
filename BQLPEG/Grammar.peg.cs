@@ -20,6 +20,11 @@ namespace
        BQLPEG.Nodes
         #line default
         ;
+    using
+        #line 3 "Grammar.peg"
+       System.Linq
+        #line default
+        ;
 
     /// <summary>
     ///  Parses a string according to the rules of the <see cref="Parser" /> grammar.
@@ -67,7 +72,7 @@ namespace
         }
 
         private IParseResult<
-            #line 4 "Grammar.peg"
+            #line 5 "Grammar.peg"
           StatementNode
             #line default
             > stmtLine(ref Cursor cursor)
@@ -101,7 +106,7 @@ namespace
                 if (r2 != null)
                 {
                     r0 = this.ReturnHelper<StatementNode>(startCursor0, ref cursor, state =>
-                        #line 4 "Grammar.peg"
+                        #line 5 "Grammar.peg"
                                            stmt
                         #line default
                         );
@@ -119,7 +124,7 @@ namespace
         }
 
         private IParseResult<
-            #line 5 "Grammar.peg"
+            #line 6 "Grammar.peg"
           IEnumerable<StatementNode>
             #line default
             > stmtList(ref Cursor cursor)
@@ -152,7 +157,7 @@ namespace
         }
 
         private IParseResult<
-            #line 6 "Grammar.peg"
+            #line 7 "Grammar.peg"
     string
             #line default
             > Id(ref Cursor cursor)
@@ -200,7 +205,7 @@ namespace
             if (r1 != null)
             {
                 r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                    #line 6 "Grammar.peg"
+                    #line 7 "Grammar.peg"
                                      string.Concat(id)
                     #line default
                     );
@@ -213,7 +218,7 @@ namespace
         }
 
         private IParseResult<
-            #line 7 "Grammar.peg"
+            #line 8 "Grammar.peg"
       StatementNode
             #line default
             > stmt(ref Cursor cursor)
@@ -267,7 +272,7 @@ namespace
         }
 
         private IParseResult<
-            #line 8 "Grammar.peg"
+            #line 9 "Grammar.peg"
                  CreateTableNode
             #line default
             > createTableStmt(ref Cursor cursor)
@@ -304,7 +309,7 @@ namespace
                                 r6 = this.ParseLiteral(ref cursor, ")");
                                 if (r6 != null)
                                 {
-                                    IParseResult<IList<string>> r7 = null;
+                                    IParseResult<IList<ConstraintNode>> r7 = null;
                                     var constraintsStart = cursor;
                                     r7 = this.constraintListOpt(ref cursor);
                                     var constraintsEnd = cursor;
@@ -312,7 +317,7 @@ namespace
                                     if (r7 != null)
                                     {
                                         r0 = this.ReturnHelper<CreateTableNode>(startCursor0, ref cursor, state =>
-                                            #line 8 "Grammar.peg"
+                                            #line 9 "Grammar.peg"
                                                                                                                   new CreateTableNode{Name=id, Fields=fields, Constraints=constraints}
                                             #line default
                                             );
@@ -395,7 +400,7 @@ namespace
         }
 
         private IParseResult<
-            #line 10 "Grammar.peg"
+            #line 11 "Grammar.peg"
           FieldNode
             #line default
             > fieldDef(ref Cursor cursor)
@@ -438,62 +443,16 @@ namespace
                     var typeParams = ValueOrDefault(r3);
                     if (r3 != null)
                     {
-                        IParseResult<IList<string>> r5 = null;
+                        IParseResult<bool> r5 = null;
                         var nullStart = cursor;
-                        var startCursor2 = cursor;
-                        var l1 = new List<string>();
-                        while (l1.Count < 1)
-                        {
-                            IParseResult<string> r6 = null;
-                            if (r6 == null)
-                            {
-                                r6 = this.NULL(ref cursor);
-                            }
-                            if (r6 == null)
-                            {
-                                var startCursor3 = cursor;
-                                IParseResult<string> r7 = null;
-                                r7 = this.NOT(ref cursor);
-                                if (r7 != null)
-                                {
-                                    IParseResult<string> r8 = null;
-                                    r8 = this.NULL(ref cursor);
-                                    if (r8 != null)
-                                    {
-                                        {
-                                            var len = cursor.Location - startCursor3.Location;
-                                            r6 = this.ReturnHelper<string>(startCursor3, ref cursor, state =>
-                                                state.Subject.Substring(startCursor3.Location, len)
-                                                );
-                                        }
-                                    }
-                                    else
-                                    {
-                                        cursor = startCursor3;
-                                    }
-                                }
-                                else
-                                {
-                                    cursor = startCursor3;
-                                }
-                            }
-                            if (r6 != null)
-                            {
-                                l1.Add(r6.Value);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        r5 = this.ReturnHelper<IList<string>>(startCursor2, ref cursor, state => l1.AsReadOnly());
+                        r5 = this.nullOpt(ref cursor);
                         var nullEnd = cursor;
                         var @null = ValueOrDefault(r5);
                         if (r5 != null)
                         {
                             r0 = this.ReturnHelper<FieldNode>(startCursor0, ref cursor, state =>
-                                #line 10 "Grammar.peg"
-                                                                                           new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=null}
+                                #line 11 "Grammar.peg"
+                                                                                new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=null??true}
                                 #line default
                                 );
                         }
@@ -610,7 +569,7 @@ namespace
         }
 
         private IParseResult<
-            #line 12 "Grammar.peg"
+            #line 13 "Grammar.peg"
             IEnumerable<int>
             #line default
             > typeParams(ref Cursor cursor)
@@ -635,7 +594,7 @@ namespace
                         if (r3 != null)
                         {
                             r0 = this.ReturnHelper<IEnumerable<int>>(startCursor0, ref cursor, state =>
-                                #line 12 "Grammar.peg"
+                                #line 13 "Grammar.peg"
                                                      new int[]{int.Parse(num)}
                                 #line default
                                 );
@@ -685,7 +644,7 @@ namespace
                                 if (r8 != null)
                                 {
                                     r0 = this.ReturnHelper<IEnumerable<int>>(startCursor1, ref cursor, state =>
-                                        #line 12 "Grammar.peg"
+                                        #line 13 "Grammar.peg"
                                                                                                                         new int[]{int.Parse(num1),int.Parse(num2)}
                                         #line default
                                         );
@@ -718,28 +677,107 @@ namespace
             return r0;
         }
 
-        private IParseResult<string> constraintDef(ref Cursor cursor)
+        private IParseResult<
+            #line 14 "Grammar.peg"
+         bool
+            #line default
+            > nullOpt(ref Cursor cursor)
         {
-            IParseResult<string> r0 = null;
+            IParseResult<bool> r0 = null;
+            var startCursor0 = cursor;
+            var l0 = new List<string>();
+            while (l0.Count < 1)
+            {
+                IParseResult<string> r1 = null;
+                if (r1 == null)
+                {
+                    var startCursor1 = cursor;
+                    IParseResult<string> r2 = null;
+                    r2 = this.NULL(ref cursor);
+                    if (r2 != null)
+                    {
+                        r1 = this.ReturnHelper<string>(startCursor1, ref cursor, state =>
+                            #line 14 "Grammar.peg"
+                        true
+                            #line default
+                            );
+                    }
+                    else
+                    {
+                        cursor = startCursor1;
+                    }
+                }
+                if (r1 == null)
+                {
+                    var startCursor2 = cursor;
+                    IParseResult<string> r3 = null;
+                    r3 = this.NOT(ref cursor);
+                    if (r3 != null)
+                    {
+                        IParseResult<string> r4 = null;
+                        r4 = this.NULL(ref cursor);
+                        if (r4 != null)
+                        {
+                            r1 = this.ReturnHelper<string>(startCursor2, ref cursor, state =>
+                                #line 14 "Grammar.peg"
+                                        false
+                                #line default
+                                );
+                        }
+                        else
+                        {
+                            cursor = startCursor2;
+                        }
+                    }
+                    else
+                    {
+                        cursor = startCursor2;
+                    }
+                }
+                if (r1 != null)
+                {
+                    l0.Add(r1.Value);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state => l0.AsReadOnly());
+            return r0;
+        }
+
+        private IParseResult<
+            #line 15 "Grammar.peg"
+               ConstraintNode
+            #line default
+            > constraintDef(ref Cursor cursor)
+        {
+            IParseResult<ConstraintNode> r0 = null;
             var startCursor0 = cursor;
             IParseResult<string> r1 = null;
             r1 = this.CONSTRAINT(ref cursor);
             if (r1 != null)
             {
                 IParseResult<string> r2 = null;
+                var idStart = cursor;
                 r2 = this.Id(ref cursor);
+                var idEnd = cursor;
+                var id = ValueOrDefault(r2);
                 if (r2 != null)
                 {
-                    IParseResult<string> r3 = null;
+                    IParseResult<ConstraintTypeNode> r3 = null;
+                    var constraintTypeStart = cursor;
                     r3 = this.constraintTypeOpt(ref cursor);
+                    var constraintTypeEnd = cursor;
+                    var constraintType = ValueOrDefault(r3);
                     if (r3 != null)
                     {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
+                        r0 = this.ReturnHelper<ConstraintNode>(startCursor0, ref cursor, state =>
+                            #line 15 "Grammar.peg"
+                                                                                    new ConstraintNode{ Name=id, ConstraintType=constraintType}
+                            #line default
+                            );
                     }
                     else
                     {
@@ -758,14 +796,14 @@ namespace
             return r0;
         }
 
-        private IParseResult<IList<string>> constraintListOpt(ref Cursor cursor)
+        private IParseResult<IList<ConstraintNode>> constraintListOpt(ref Cursor cursor)
         {
-            IParseResult<IList<string>> r0 = null;
+            IParseResult<IList<ConstraintNode>> r0 = null;
             var startCursor0 = cursor;
-            var l0 = new List<string>();
+            var l0 = new List<ConstraintNode>();
             while (true)
             {
-                IParseResult<string> r1 = null;
+                IParseResult<ConstraintNode> r1 = null;
                 r1 = this.constraintDef(ref cursor);
                 if (r1 != null)
                 {
@@ -776,13 +814,17 @@ namespace
                     break;
                 }
             }
-            r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state => l0.AsReadOnly());
+            r0 = this.ReturnHelper<IList<ConstraintNode>>(startCursor0, ref cursor, state => l0.AsReadOnly());
             return r0;
         }
 
-        private IParseResult<string> constraintTypeOpt(ref Cursor cursor)
+        private IParseResult<
+            #line 17 "Grammar.peg"
+                   ConstraintTypeNode
+            #line default
+            > constraintTypeOpt(ref Cursor cursor)
         {
-            IParseResult<string> r0 = null;
+            IParseResult<ConstraintTypeNode> r0 = null;
             if (r0 == null)
             {
                 var startCursor0 = cursor;
@@ -794,16 +836,18 @@ namespace
                     r2 = this.KEY(ref cursor);
                     if (r2 != null)
                     {
-                        IParseResult<string> r3 = null;
+                        IParseResult<IList<string>> r3 = null;
+                        var idsStart = cursor;
                         r3 = this.idlistPar(ref cursor);
+                        var idsEnd = cursor;
+                        var ids = ValueOrDefault(r3);
                         if (r3 != null)
                         {
-                            {
-                                var len = cursor.Location - startCursor0.Location;
-                                r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                    state.Subject.Substring(startCursor0.Location, len)
-                                    );
-                            }
+                            r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor0, ref cursor, state =>
+                                #line 17 "Grammar.peg"
+                                                                    new PKConstraintTypeNode{Ids=ids}
+                                #line default
+                                );
                         }
                         else
                         {
@@ -827,13 +871,13 @@ namespace
                 r4 = this.UNIQUE(ref cursor);
                 if (r4 != null)
                 {
-                    IParseResult<string> r5 = null;
+                    IParseResult<IList<string>> r5 = null;
                     r5 = this.idlistPar(ref cursor);
                     if (r5 != null)
                     {
                         {
                             var len = cursor.Location - startCursor1.Location;
-                            r0 = this.ReturnHelper<string>(startCursor1, ref cursor, state =>
+                            r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor1, ref cursor, state =>
                                 state.Subject.Substring(startCursor1.Location, len)
                                 );
                         }
@@ -859,13 +903,13 @@ namespace
                     r7 = this.NULL(ref cursor);
                     if (r7 != null)
                     {
-                        IParseResult<string> r8 = null;
+                        IParseResult<IList<string>> r8 = null;
                         r8 = this.idlistPar(ref cursor);
                         if (r8 != null)
                         {
                             {
                                 var len = cursor.Location - startCursor2.Location;
-                                r0 = this.ReturnHelper<string>(startCursor2, ref cursor, state =>
+                                r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor2, ref cursor, state =>
                                     state.Subject.Substring(startCursor2.Location, len)
                                     );
                             }
@@ -896,7 +940,7 @@ namespace
                     r10 = this.KEY(ref cursor);
                     if (r10 != null)
                     {
-                        IParseResult<string> r11 = null;
+                        IParseResult<IList<string>> r11 = null;
                         r11 = this.idlistPar(ref cursor);
                         if (r11 != null)
                         {
@@ -908,13 +952,13 @@ namespace
                                 r13 = this.Id(ref cursor);
                                 if (r13 != null)
                                 {
-                                    IParseResult<string> r14 = null;
+                                    IParseResult<IList<string>> r14 = null;
                                     r14 = this.idlistPar(ref cursor);
                                     if (r14 != null)
                                     {
                                         {
                                             var len = cursor.Location - startCursor3.Location;
-                                            r0 = this.ReturnHelper<string>(startCursor3, ref cursor, state =>
+                                            r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor3, ref cursor, state =>
                                                 state.Subject.Substring(startCursor3.Location, len)
                                                 );
                                         }
@@ -952,28 +996,34 @@ namespace
             return r0;
         }
 
-        private IParseResult<string> idlistPar(ref Cursor cursor)
+        private IParseResult<
+            #line 18 "Grammar.peg"
+           IList<string>
+            #line default
+            > idlistPar(ref Cursor cursor)
         {
-            IParseResult<string> r0 = null;
+            IParseResult<IList<string>> r0 = null;
             var startCursor0 = cursor;
             IParseResult<string> r1 = null;
             r1 = this.ParseLiteral(ref cursor, "(");
             if (r1 != null)
             {
                 IParseResult<IList<string>> r2 = null;
+                var idsStart = cursor;
                 r2 = this.idlist(ref cursor);
+                var idsEnd = cursor;
+                var ids = ValueOrDefault(r2);
                 if (r2 != null)
                 {
                     IParseResult<string> r3 = null;
                     r3 = this.ParseLiteral(ref cursor, ")");
                     if (r3 != null)
                     {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
+                        r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state =>
+                            #line 18 "Grammar.peg"
+                                                ids
+                            #line default
+                            );
                     }
                     else
                     {
@@ -1415,7 +1465,7 @@ namespace
                         r3 = this.fieldDefList(ref cursor);
                         if (r3 != null)
                         {
-                            IParseResult<IList<string>> r4 = null;
+                            IParseResult<IList<ConstraintNode>> r4 = null;
                             r4 = this.constraintListOpt(ref cursor);
                             if (r4 != null)
                             {
@@ -1453,7 +1503,7 @@ namespace
                 r5 = this.ADD(ref cursor);
                 if (r5 != null)
                 {
-                    IParseResult<string> r6 = null;
+                    IParseResult<ConstraintNode> r6 = null;
                     r6 = this.constraintDef(ref cursor);
                     if (r6 != null)
                     {
@@ -1680,7 +1730,7 @@ namespace
                     r4 = this.Id(ref cursor);
                     if (r4 != null)
                     {
-                        IParseResult<string> r5 = null;
+                        IParseResult<IList<string>> r5 = null;
                         r5 = this.idlistPar(ref cursor);
                         if (r5 != null)
                         {
@@ -3852,7 +3902,7 @@ namespace
         }
 
         private IParseResult<
-            #line 69 "Grammar.peg"
+            #line 71 "Grammar.peg"
            string
             #line default
             > Id_simple(ref Cursor cursor)
