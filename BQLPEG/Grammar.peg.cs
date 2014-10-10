@@ -27,17 +27,18 @@ namespace
         ;
 
     /// <summary>
-    ///  Parses a string according to the rules of the <see cref="Parser" /> grammar.
+    ///  Parses a string according to the rules of the <see cref="Grammar" /> grammar.
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("Pegasus", "3.1.0.0")]
     public
     partial class
-    Parser
+    #line 4 "Grammar.peg"
+           Grammar
+    #line default
     {
-        private Dictionary<string, object> storage;
 
         /// <summary>
-        ///  Parses a string according to the rules of the <see cref="Parser" /> grammar.
+        ///  Parses a string according to the rules of the <see cref="Grammar" /> grammar.
         /// </summary>
         /// <param name="subject">The parsing subject.</param>
         /// <param name="fileName">The optional file name to use in error messages.</param>
@@ -47,21 +48,13 @@ namespace
         /// </exception>
         public IEnumerable<StatementNode> Parse(string subject, string fileName = null)
         {
-            try
+            var cursor = new Cursor(subject, 0, fileName);
+            var result = this.Root(ref cursor);
+            if (result == null)
             {
-                this.storage = new Dictionary<string, object>();
-                var cursor = new Cursor(subject, 0, fileName);
-                var result = this.Root(ref cursor);
-                if (result == null)
-                {
-                    throw ExceptionHelper(cursor, state => "Failed to parse 'Root'.");
-                }
-                return result.Value;
+                throw ExceptionHelper(cursor, state => "Failed to parse 'Root'.");
             }
-            finally
-            {
-                this.storage = null;
-            }
+            return result.Value;
         }
 
         private IParseResult<IEnumerable<StatementNode>> Root(ref Cursor cursor)
@@ -72,7 +65,7 @@ namespace
         }
 
         private IParseResult<
-            #line 5 "Grammar.peg"
+            #line 6 "Grammar.peg"
           StatementNode
             #line default
             > stmtLine(ref Cursor cursor)
@@ -106,7 +99,7 @@ namespace
                 if (r2 != null)
                 {
                     r0 = this.ReturnHelper<StatementNode>(startCursor0, ref cursor, state =>
-                        #line 5 "Grammar.peg"
+                        #line 6 "Grammar.peg"
                                            stmt
                         #line default
                         );
@@ -124,7 +117,7 @@ namespace
         }
 
         private IParseResult<
-            #line 6 "Grammar.peg"
+            #line 7 "Grammar.peg"
           IEnumerable<StatementNode>
             #line default
             > stmtList(ref Cursor cursor)
@@ -157,7 +150,7 @@ namespace
         }
 
         private IParseResult<
-            #line 7 "Grammar.peg"
+            #line 8 "Grammar.peg"
     string
             #line default
             > Id(ref Cursor cursor)
@@ -205,7 +198,7 @@ namespace
             if (r1 != null)
             {
                 r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                    #line 7 "Grammar.peg"
+                    #line 8 "Grammar.peg"
                                      string.Concat(id)
                     #line default
                     );
@@ -218,7 +211,7 @@ namespace
         }
 
         private IParseResult<
-            #line 8 "Grammar.peg"
+            #line 9 "Grammar.peg"
       StatementNode
             #line default
             > stmt(ref Cursor cursor)
@@ -230,49 +223,100 @@ namespace
             }
             if (r0 == null)
             {
-                r0 = this.createIndexStmt(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.alterStmt(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.dropTableStmt(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.dropIndexStmt(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.selectStmt(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.insertStmt(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.updateStmt(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.deleteStmt(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.projectionDecl(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "GO");
+                var startCursor0 = cursor;
+                IParseResult<string> r1 = null;
+                r1 = this.ParseLiteral(ref cursor, "GO");
+                if (r1 != null)
+                {
+                    r0 = this.ReturnHelper<StatementNode>(startCursor0, ref cursor, state =>
+                        #line 9 "Grammar.peg"
+                                                new GoStatementNode()
+                        #line default
+                        );
+                }
+                else
+                {
+                    cursor = startCursor0;
+                }
             }
             return r0;
         }
 
         private IParseResult<
-            #line 9 "Grammar.peg"
+            #line 10 "Grammar.peg"
+                    CreateTableNode
+            #line default
+            > oldCreateTableStmt(ref Cursor cursor)
+        {
+            IParseResult<CreateTableNode> r0 = null;
+            var startCursor0 = cursor;
+            IParseResult<string> r1 = null;
+            r1 = this.CREATE(ref cursor);
+            if (r1 != null)
+            {
+                IParseResult<IList<string>> r2 = null;
+                r2 = this.ows(ref cursor);
+                if (r2 != null)
+                {
+                    IParseResult<string> r3 = null;
+                    r3 = this.TABLE(ref cursor);
+                    if (r3 != null)
+                    {
+                        IParseResult<IList<string>> r4 = null;
+                        r4 = this.ows(ref cursor);
+                        if (r4 != null)
+                        {
+                            IParseResult<string> r5 = null;
+                            var idStart = cursor;
+                            r5 = this.Id(ref cursor);
+                            var idEnd = cursor;
+                            var id = ValueOrDefault(r5);
+                            if (r5 != null)
+                            {
+                                IParseResult<IList<string>> r6 = null;
+                                r6 = this.ows(ref cursor);
+                                if (r6 != null)
+                                {
+                                    r0 = this.ReturnHelper<CreateTableNode>(startCursor0, ref cursor, state =>
+                                        #line 10 "Grammar.peg"
+                                                                      new CreateTableNode{Name=id}
+                                        #line default
+                                        );
+                                }
+                                else
+                                {
+                                    cursor = startCursor0;
+                                }
+                            }
+                            else
+                            {
+                                cursor = startCursor0;
+                            }
+                        }
+                        else
+                        {
+                            cursor = startCursor0;
+                        }
+                    }
+                    else
+                    {
+                        cursor = startCursor0;
+                    }
+                }
+                else
+                {
+                    cursor = startCursor0;
+                }
+            }
+            else
+            {
+                cursor = startCursor0;
+            }
+            return r0;
+        }
+
+        private IParseResult<
+            #line 11 "Grammar.peg"
                  CreateTableNode
             #line default
             > createTableStmt(ref Cursor cursor)
@@ -283,44 +327,192 @@ namespace
             r1 = this.CREATE(ref cursor);
             if (r1 != null)
             {
-                IParseResult<string> r2 = null;
-                r2 = this.TABLE(ref cursor);
+                IParseResult<IList<string>> r2 = null;
+                r2 = this.ows(ref cursor);
                 if (r2 != null)
                 {
                     IParseResult<string> r3 = null;
-                    var idStart = cursor;
-                    r3 = this.Id(ref cursor);
-                    var idEnd = cursor;
-                    var id = ValueOrDefault(r3);
+                    r3 = this.TABLE(ref cursor);
                     if (r3 != null)
                     {
-                        IParseResult<string> r4 = null;
-                        r4 = this.ParseLiteral(ref cursor, "(");
+                        IParseResult<IList<string>> r4 = null;
+                        r4 = this.ows(ref cursor);
                         if (r4 != null)
                         {
-                            IParseResult<IList<FieldNode>> r5 = null;
-                            var fieldsStart = cursor;
-                            r5 = this.fieldDefList(ref cursor);
-                            var fieldsEnd = cursor;
-                            var fields = ValueOrDefault(r5);
+                            IParseResult<string> r5 = null;
+                            var idStart = cursor;
+                            r5 = this.Id(ref cursor);
+                            var idEnd = cursor;
+                            var id = ValueOrDefault(r5);
                             if (r5 != null)
                             {
-                                IParseResult<string> r6 = null;
-                                r6 = this.ParseLiteral(ref cursor, ")");
+                                IParseResult<IList<string>> r6 = null;
+                                r6 = this.ows(ref cursor);
                                 if (r6 != null)
                                 {
-                                    IParseResult<IList<ConstraintNode>> r7 = null;
-                                    var constraintsStart = cursor;
-                                    r7 = this.constraintListOpt(ref cursor);
-                                    var constraintsEnd = cursor;
-                                    var constraints = ValueOrDefault(r7);
+                                    IParseResult<string> r7 = null;
+                                    r7 = this.ParseLiteral(ref cursor, "(");
                                     if (r7 != null)
                                     {
-                                        r0 = this.ReturnHelper<CreateTableNode>(startCursor0, ref cursor, state =>
-                                            #line 9 "Grammar.peg"
-                                                                                                                  new CreateTableNode{Name=id, Fields=fields, Constraints=constraints}
-                                            #line default
-                                            );
+                                        IParseResult<IList<string>> r8 = null;
+                                        r8 = this.ows(ref cursor);
+                                        if (r8 != null)
+                                        {
+                                            IParseResult<IList<FieldNode>> r9 = null;
+                                            var fieldsStart = cursor;
+                                            r9 = this.fieldDefList(ref cursor);
+                                            var fieldsEnd = cursor;
+                                            var fields = ValueOrDefault(r9);
+                                            if (r9 != null)
+                                            {
+                                                IParseResult<IList<string>> r10 = null;
+                                                r10 = this.ows(ref cursor);
+                                                if (r10 != null)
+                                                {
+                                                    IParseResult<string> r11 = null;
+                                                    r11 = this.ParseLiteral(ref cursor, ")");
+                                                    if (r11 != null)
+                                                    {
+                                                        r0 = this.ReturnHelper<CreateTableNode>(startCursor0, ref cursor, state =>
+                                                            #line 11 "Grammar.peg"
+                                                                                                        new CreateTableNode{Name=id, Fields=fields}
+                                                            #line default
+                                                            );
+                                                    }
+                                                    else
+                                                    {
+                                                        cursor = startCursor0;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    cursor = startCursor0;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                cursor = startCursor0;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            cursor = startCursor0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        cursor = startCursor0;
+                                    }
+                                }
+                                else
+                                {
+                                    cursor = startCursor0;
+                                }
+                            }
+                            else
+                            {
+                                cursor = startCursor0;
+                            }
+                        }
+                        else
+                        {
+                            cursor = startCursor0;
+                        }
+                    }
+                    else
+                    {
+                        cursor = startCursor0;
+                    }
+                }
+                else
+                {
+                    cursor = startCursor0;
+                }
+            }
+            else
+            {
+                cursor = startCursor0;
+            }
+            return r0;
+        }
+
+        private IParseResult<
+            #line 12 "Grammar.peg"
+                     CreateTableNode
+            #line default
+            > testCreateTableStmt(ref Cursor cursor)
+        {
+            IParseResult<CreateTableNode> r0 = null;
+            var startCursor0 = cursor;
+            IParseResult<string> r1 = null;
+            r1 = this.CREATE(ref cursor);
+            if (r1 != null)
+            {
+                IParseResult<IList<string>> r2 = null;
+                r2 = this.ows(ref cursor);
+                if (r2 != null)
+                {
+                    IParseResult<string> r3 = null;
+                    r3 = this.TABLE(ref cursor);
+                    if (r3 != null)
+                    {
+                        IParseResult<IList<string>> r4 = null;
+                        r4 = this.ows(ref cursor);
+                        if (r4 != null)
+                        {
+                            IParseResult<string> r5 = null;
+                            var idStart = cursor;
+                            r5 = this.Id(ref cursor);
+                            var idEnd = cursor;
+                            var id = ValueOrDefault(r5);
+                            if (r5 != null)
+                            {
+                                IParseResult<IList<string>> r6 = null;
+                                r6 = this.ows(ref cursor);
+                                if (r6 != null)
+                                {
+                                    IParseResult<string> r7 = null;
+                                    r7 = this.ParseLiteral(ref cursor, "(");
+                                    if (r7 != null)
+                                    {
+                                        IParseResult<IList<FieldNode>> r8 = null;
+                                        var fieldsStart = cursor;
+                                        r8 = this.fieldDefList(ref cursor);
+                                        var fieldsEnd = cursor;
+                                        var fields = ValueOrDefault(r8);
+                                        if (r8 != null)
+                                        {
+                                            IParseResult<string> r9 = null;
+                                            r9 = this.ParseLiteral(ref cursor, ")");
+                                            if (r9 != null)
+                                            {
+                                                IParseResult<IList<ConstraintNode>> r10 = null;
+                                                var constraintsStart = cursor;
+                                                r10 = this.constraintListOpt(ref cursor);
+                                                var constraintsEnd = cursor;
+                                                var constraints = ValueOrDefault(r10);
+                                                if (r10 != null)
+                                                {
+                                                    r0 = this.ReturnHelper<CreateTableNode>(startCursor0, ref cursor, state =>
+                                                        #line 12 "Grammar.peg"
+                                                                                                                                  new CreateTableNode{Name=id, Fields=fields, Constraints=constraints}
+                                                        #line default
+                                                        );
+                                                }
+                                                else
+                                                {
+                                                    cursor = startCursor0;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                cursor = startCursor0;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            cursor = startCursor0;
+                                        }
                                     }
                                     else
                                     {
@@ -370,17 +562,50 @@ namespace
                 if (l0.Count > 0)
                 {
                     IParseResult<string> r1 = null;
-                    r1 = this.comma(ref cursor);
+                    var startCursor2 = cursor;
+                    IParseResult<IList<string>> r2 = null;
+                    r2 = this.ows(ref cursor);
+                    if (r2 != null)
+                    {
+                        IParseResult<string> r3 = null;
+                        r3 = this.comma(ref cursor);
+                        if (r3 != null)
+                        {
+                            IParseResult<IList<string>> r4 = null;
+                            r4 = this.ows(ref cursor);
+                            if (r4 != null)
+                            {
+                                {
+                                    var len = cursor.Location - startCursor2.Location;
+                                    r1 = this.ReturnHelper<string>(startCursor2, ref cursor, state =>
+                                        state.Subject.Substring(startCursor2.Location, len)
+                                        );
+                                }
+                            }
+                            else
+                            {
+                                cursor = startCursor2;
+                            }
+                        }
+                        else
+                        {
+                            cursor = startCursor2;
+                        }
+                    }
+                    else
+                    {
+                        cursor = startCursor2;
+                    }
                     if (r1 == null)
                     {
                         break;
                     }
                 }
-                IParseResult<FieldNode> r2 = null;
-                r2 = this.fieldDef(ref cursor);
-                if (r2 != null)
+                IParseResult<FieldNode> r5 = null;
+                r5 = this.fieldDef(ref cursor);
+                if (r5 != null)
                 {
-                    l0.Add(r2.Value);
+                    l0.Add(r5.Value);
                 }
                 else
                 {
@@ -400,7 +625,7 @@ namespace
         }
 
         private IParseResult<
-            #line 11 "Grammar.peg"
+            #line 14 "Grammar.peg"
           FieldNode
             #line default
             > fieldDef(ref Cursor cursor)
@@ -414,47 +639,74 @@ namespace
             var id = ValueOrDefault(r1);
             if (r1 != null)
             {
-                IParseResult<string> r2 = null;
-                var typeStart = cursor;
-                r2 = this.typeName(ref cursor);
-                var typeEnd = cursor;
-                var type = ValueOrDefault(r2);
+                IParseResult<IList<string>> r2 = null;
+                r2 = this.ows(ref cursor);
                 if (r2 != null)
                 {
-                    IParseResult<IList<IEnumerable<int>>> r3 = null;
-                    var typeParamsStart = cursor;
-                    var startCursor1 = cursor;
-                    var l0 = new List<IEnumerable<int>>();
-                    while (l0.Count < 1)
-                    {
-                        IParseResult<IEnumerable<int>> r4 = null;
-                        r4 = this.typeParams(ref cursor);
-                        if (r4 != null)
-                        {
-                            l0.Add(r4.Value);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    r3 = this.ReturnHelper<IList<IEnumerable<int>>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                    var typeParamsEnd = cursor;
-                    var typeParams = ValueOrDefault(r3);
+                    IParseResult<string> r3 = null;
+                    var typeStart = cursor;
+                    r3 = this.typeName(ref cursor);
+                    var typeEnd = cursor;
+                    var type = ValueOrDefault(r3);
                     if (r3 != null)
                     {
-                        IParseResult<bool> r5 = null;
-                        var nullvalStart = cursor;
-                        r5 = this.nullOpt(ref cursor);
-                        var nullvalEnd = cursor;
-                        var nullval = ValueOrDefault(r5);
-                        if (r5 != null)
+                        IParseResult<IList<string>> r4 = null;
+                        r4 = this.ows(ref cursor);
+                        if (r4 != null)
                         {
-                            r0 = this.ReturnHelper<FieldNode>(startCursor0, ref cursor, state =>
-                                #line 11 "Grammar.peg"
-                                                                                   new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=nullval}
-                                #line default
-                                );
+                            IParseResult<IList<IEnumerable<int>>> r5 = null;
+                            var typeParamsStart = cursor;
+                            var startCursor1 = cursor;
+                            var l0 = new List<IEnumerable<int>>();
+                            while (l0.Count < 1)
+                            {
+                                IParseResult<IEnumerable<int>> r6 = null;
+                                r6 = this.typeParams(ref cursor);
+                                if (r6 != null)
+                                {
+                                    l0.Add(r6.Value);
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            r5 = this.ReturnHelper<IList<IEnumerable<int>>>(startCursor1, ref cursor, state => l0.AsReadOnly());
+                            var typeParamsEnd = cursor;
+                            var typeParams = ValueOrDefault(r5);
+                            if (r5 != null)
+                            {
+                                IParseResult<IList<string>> r7 = null;
+                                r7 = this.ows(ref cursor);
+                                if (r7 != null)
+                                {
+                                    IParseResult<bool> r8 = null;
+                                    var nullvalStart = cursor;
+                                    r8 = this.nullOpt(ref cursor);
+                                    var nullvalEnd = cursor;
+                                    var nullval = ValueOrDefault(r8);
+                                    if (r8 != null)
+                                    {
+                                        r0 = this.ReturnHelper<FieldNode>(startCursor0, ref cursor, state =>
+                                            #line 14 "Grammar.peg"
+                                                                                               new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=nullval}
+                                            #line default
+                                            );
+                                    }
+                                    else
+                                    {
+                                        cursor = startCursor0;
+                                    }
+                                }
+                                else
+                                {
+                                    cursor = startCursor0;
+                                }
+                            }
+                            else
+                            {
+                                cursor = startCursor0;
+                            }
                         }
                         else
                         {
@@ -569,7 +821,7 @@ namespace
         }
 
         private IParseResult<
-            #line 13 "Grammar.peg"
+            #line 16 "Grammar.peg"
             IEnumerable<int>
             #line default
             > typeParams(ref Cursor cursor)
@@ -582,22 +834,40 @@ namespace
                 r1 = this.ParseLiteral(ref cursor, "(");
                 if (r1 != null)
                 {
-                    IParseResult<string> r2 = null;
-                    var numStart = cursor;
-                    r2 = this.number(ref cursor);
-                    var numEnd = cursor;
-                    var num = ValueOrDefault(r2);
+                    IParseResult<IList<string>> r2 = null;
+                    r2 = this.ows(ref cursor);
                     if (r2 != null)
                     {
                         IParseResult<string> r3 = null;
-                        r3 = this.ParseLiteral(ref cursor, ")");
+                        var numStart = cursor;
+                        r3 = this.number(ref cursor);
+                        var numEnd = cursor;
+                        var num = ValueOrDefault(r3);
                         if (r3 != null)
                         {
-                            r0 = this.ReturnHelper<IEnumerable<int>>(startCursor0, ref cursor, state =>
-                                #line 13 "Grammar.peg"
-                                                     new int[]{int.Parse(num)}
-                                #line default
-                                );
+                            IParseResult<IList<string>> r4 = null;
+                            r4 = this.ows(ref cursor);
+                            if (r4 != null)
+                            {
+                                IParseResult<string> r5 = null;
+                                r5 = this.ParseLiteral(ref cursor, ")");
+                                if (r5 != null)
+                                {
+                                    r0 = this.ReturnHelper<IEnumerable<int>>(startCursor0, ref cursor, state =>
+                                        #line 16 "Grammar.peg"
+                                                             new int[]{int.Parse(num)}
+                                        #line default
+                                        );
+                                }
+                                else
+                                {
+                                    cursor = startCursor0;
+                                }
+                            }
+                            else
+                            {
+                                cursor = startCursor0;
+                            }
                         }
                         else
                         {
@@ -617,37 +887,64 @@ namespace
             if (r0 == null)
             {
                 var startCursor1 = cursor;
-                IParseResult<string> r4 = null;
-                r4 = this.ParseLiteral(ref cursor, "(");
-                if (r4 != null)
+                IParseResult<string> r6 = null;
+                r6 = this.ParseLiteral(ref cursor, "(");
+                if (r6 != null)
                 {
-                    IParseResult<string> r5 = null;
-                    var num1Start = cursor;
-                    r5 = this.number(ref cursor);
-                    var num1End = cursor;
-                    var num1 = ValueOrDefault(r5);
-                    if (r5 != null)
+                    IParseResult<IList<string>> r7 = null;
+                    r7 = this.ows(ref cursor);
+                    if (r7 != null)
                     {
-                        IParseResult<string> r6 = null;
-                        r6 = this.comma(ref cursor);
-                        if (r6 != null)
+                        IParseResult<string> r8 = null;
+                        var num1Start = cursor;
+                        r8 = this.number(ref cursor);
+                        var num1End = cursor;
+                        var num1 = ValueOrDefault(r8);
+                        if (r8 != null)
                         {
-                            IParseResult<string> r7 = null;
-                            var num2Start = cursor;
-                            r7 = this.number(ref cursor);
-                            var num2End = cursor;
-                            var num2 = ValueOrDefault(r7);
-                            if (r7 != null)
+                            IParseResult<IList<string>> r9 = null;
+                            r9 = this.ows(ref cursor);
+                            if (r9 != null)
                             {
-                                IParseResult<string> r8 = null;
-                                r8 = this.ParseLiteral(ref cursor, ")");
-                                if (r8 != null)
+                                IParseResult<string> r10 = null;
+                                r10 = this.comma(ref cursor);
+                                if (r10 != null)
                                 {
-                                    r0 = this.ReturnHelper<IEnumerable<int>>(startCursor1, ref cursor, state =>
-                                        #line 13 "Grammar.peg"
-                                                                                                                        new int[]{int.Parse(num1),int.Parse(num2)}
-                                        #line default
-                                        );
+                                    IParseResult<IList<string>> r11 = null;
+                                    r11 = this.ows(ref cursor);
+                                    if (r11 != null)
+                                    {
+                                        IParseResult<string> r12 = null;
+                                        var num2Start = cursor;
+                                        r12 = this.number(ref cursor);
+                                        var num2End = cursor;
+                                        var num2 = ValueOrDefault(r12);
+                                        if (r12 != null)
+                                        {
+                                            IParseResult<string> r13 = null;
+                                            r13 = this.ParseLiteral(ref cursor, ")");
+                                            if (r13 != null)
+                                            {
+                                                r0 = this.ReturnHelper<IEnumerable<int>>(startCursor1, ref cursor, state =>
+                                                    #line 16 "Grammar.peg"
+                                                                                                                                            new int[]{int.Parse(num1),int.Parse(num2)}
+                                                    #line default
+                                                    );
+                                            }
+                                            else
+                                            {
+                                                cursor = startCursor1;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            cursor = startCursor1;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        cursor = startCursor1;
+                                    }
                                 }
                                 else
                                 {
@@ -678,7 +975,7 @@ namespace
         }
 
         private IParseResult<
-            #line 14 "Grammar.peg"
+            #line 17 "Grammar.peg"
          bool
             #line default
             > nullOpt(ref Cursor cursor)
@@ -700,7 +997,7 @@ namespace
                     if (r3 != null)
                     {
                         r2 = this.ReturnHelper<bool>(startCursor2, ref cursor, state =>
-                            #line 14 "Grammar.peg"
+                            #line 17 "Grammar.peg"
                                   true
                             #line default
                             );
@@ -717,15 +1014,24 @@ namespace
                     r4 = this.NOT(ref cursor);
                     if (r4 != null)
                     {
-                        IParseResult<string> r5 = null;
-                        r5 = this.NULL(ref cursor);
+                        IParseResult<IList<string>> r5 = null;
+                        r5 = this.ows(ref cursor);
                         if (r5 != null)
                         {
-                            r2 = this.ReturnHelper<bool>(startCursor3, ref cursor, state =>
-                                #line 14 "Grammar.peg"
-                                                  false
-                                #line default
-                                );
+                            IParseResult<string> r6 = null;
+                            r6 = this.NULL(ref cursor);
+                            if (r6 != null)
+                            {
+                                r2 = this.ReturnHelper<bool>(startCursor3, ref cursor, state =>
+                                    #line 17 "Grammar.peg"
+                                                      false
+                                    #line default
+                                    );
+                            }
+                            else
+                            {
+                                cursor = startCursor3;
+                            }
                         }
                         else
                         {
@@ -752,8 +1058,8 @@ namespace
             if (r1 != null)
             {
                 r0 = this.ReturnHelper<bool>(startCursor0, ref cursor, state =>
-                    #line 14 "Grammar.peg"
-                                                            val.SingleOrDefault()
+                    #line 17 "Grammar.peg"
+                                                                val.Any()?val.Single():true
                     #line default
                     );
             }
@@ -765,7 +1071,7 @@ namespace
         }
 
         private IParseResult<
-            #line 15 "Grammar.peg"
+            #line 18 "Grammar.peg"
                ConstraintNode
             #line default
             > constraintDef(ref Cursor cursor)
@@ -791,7 +1097,7 @@ namespace
                     if (r3 != null)
                     {
                         r0 = this.ReturnHelper<ConstraintNode>(startCursor0, ref cursor, state =>
-                            #line 15 "Grammar.peg"
+                            #line 18 "Grammar.peg"
                                                                                     new ConstraintNode{ Name=id, ConstraintType=constraintType}
                             #line default
                             );
@@ -836,7 +1142,7 @@ namespace
         }
 
         private IParseResult<
-            #line 17 "Grammar.peg"
+            #line 20 "Grammar.peg"
                    ConstraintTypeNode
             #line default
             > constraintTypeOpt(ref Cursor cursor)
@@ -861,7 +1167,7 @@ namespace
                         if (r3 != null)
                         {
                             r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor0, ref cursor, state =>
-                                #line 17 "Grammar.peg"
+                                #line 20 "Grammar.peg"
                                                                     new PKConstraintTypeNode{Ids=ids}
                                 #line default
                                 );
@@ -889,15 +1195,17 @@ namespace
                 if (r4 != null)
                 {
                     IParseResult<IList<string>> r5 = null;
+                    var idsStart = cursor;
                     r5 = this.idlistPar(ref cursor);
+                    var idsEnd = cursor;
+                    var ids = ValueOrDefault(r5);
                     if (r5 != null)
                     {
-                        {
-                            var len = cursor.Location - startCursor1.Location;
-                            r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor1, ref cursor, state =>
-                                state.Subject.Substring(startCursor1.Location, len)
-                                );
-                        }
+                        r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor1, ref cursor, state =>
+                            #line 20 "Grammar.peg"
+                                                                                                                              new UKConstraintTypeNode{Ids=ids}
+                            #line default
+                            );
                     }
                     else
                     {
@@ -921,15 +1229,17 @@ namespace
                     if (r7 != null)
                     {
                         IParseResult<IList<string>> r8 = null;
+                        var idsStart = cursor;
                         r8 = this.idlistPar(ref cursor);
+                        var idsEnd = cursor;
+                        var ids = ValueOrDefault(r8);
                         if (r8 != null)
                         {
-                            {
-                                var len = cursor.Location - startCursor2.Location;
-                                r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor2, ref cursor, state =>
-                                    state.Subject.Substring(startCursor2.Location, len)
-                                    );
-                            }
+                            r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor2, ref cursor, state =>
+                                #line 20 "Grammar.peg"
+                                                                                                                                                                                           new NotNullConstraintTypeNode{Ids=ids}
+                                #line default
+                                );
                         }
                         else
                         {
@@ -958,7 +1268,10 @@ namespace
                     if (r10 != null)
                     {
                         IParseResult<IList<string>> r11 = null;
+                        var localIdsStart = cursor;
                         r11 = this.idlistPar(ref cursor);
+                        var localIdsEnd = cursor;
+                        var localIds = ValueOrDefault(r11);
                         if (r11 != null)
                         {
                             IParseResult<string> r12 = null;
@@ -966,19 +1279,24 @@ namespace
                             if (r12 != null)
                             {
                                 IParseResult<string> r13 = null;
+                                var foreignTableStart = cursor;
                                 r13 = this.Id(ref cursor);
+                                var foreignTableEnd = cursor;
+                                var foreignTable = ValueOrDefault(r13);
                                 if (r13 != null)
                                 {
                                     IParseResult<IList<string>> r14 = null;
+                                    var foreignIdsStart = cursor;
                                     r14 = this.idlistPar(ref cursor);
+                                    var foreignIdsEnd = cursor;
+                                    var foreignIds = ValueOrDefault(r14);
                                     if (r14 != null)
                                     {
-                                        {
-                                            var len = cursor.Location - startCursor3.Location;
-                                            r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor3, ref cursor, state =>
-                                                state.Subject.Substring(startCursor3.Location, len)
-                                                );
-                                        }
+                                        r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor3, ref cursor, state =>
+                                            #line 20 "Grammar.peg"
+                                                                                                                                                                                                                                                                                                                         new FKConstraintTypeNode{LocalIds=localIds, ForeignTable=foreignTable, ForeignIds=foreignIds}
+                                            #line default
+                                            );
                                     }
                                     else
                                     {
@@ -1014,7 +1332,7 @@ namespace
         }
 
         private IParseResult<
-            #line 18 "Grammar.peg"
+            #line 21 "Grammar.peg"
            IList<string>
             #line default
             > idlistPar(ref Cursor cursor)
@@ -1037,7 +1355,7 @@ namespace
                     if (r3 != null)
                     {
                         r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state =>
-                            #line 18 "Grammar.peg"
+                            #line 21 "Grammar.peg"
                                                 ids
                             #line default
                             );
@@ -1099,2811 +1417,6 @@ namespace
             return r0;
         }
 
-        private IParseResult<string> createIndexStmt(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.CREATE(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<IList<string>> r2 = null;
-                var startCursor1 = cursor;
-                var l0 = new List<string>();
-                while (l0.Count < 1)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.UNIQUE(ref cursor);
-                    if (r3 != null)
-                    {
-                        l0.Add(r3.Value);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                r2 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                if (r2 != null)
-                {
-                    IParseResult<string> r4 = null;
-                    r4 = this.INDEX(ref cursor);
-                    if (r4 != null)
-                    {
-                        IParseResult<string> r5 = null;
-                        r5 = this.Id(ref cursor);
-                        if (r5 != null)
-                        {
-                            IParseResult<string> r6 = null;
-                            r6 = this.ON(ref cursor);
-                            if (r6 != null)
-                            {
-                                IParseResult<string> r7 = null;
-                                r7 = this.Id(ref cursor);
-                                if (r7 != null)
-                                {
-                                    IParseResult<IList<string>> r8 = null;
-                                    r8 = this.orderList(ref cursor);
-                                    if (r8 != null)
-                                    {
-                                        IParseResult<IList<string>> r9 = null;
-                                        var startCursor2 = cursor;
-                                        var l1 = new List<string>();
-                                        while (l1.Count < 1)
-                                        {
-                                            IParseResult<string> r10 = null;
-                                            r10 = this.withClause(ref cursor);
-                                            if (r10 != null)
-                                            {
-                                                l1.Add(r10.Value);
-                                            }
-                                            else
-                                            {
-                                                break;
-                                            }
-                                        }
-                                        r9 = this.ReturnHelper<IList<string>>(startCursor2, ref cursor, state => l1.AsReadOnly());
-                                        if (r9 != null)
-                                        {
-                                            {
-                                                var len = cursor.Location - startCursor0.Location;
-                                                r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                                    state.Subject.Substring(startCursor0.Location, len)
-                                                    );
-                                            }
-                                        }
-                                        else
-                                        {
-                                            cursor = startCursor0;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        cursor = startCursor0;
-                                    }
-                                }
-                                else
-                                {
-                                    cursor = startCursor0;
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor0;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<IList<string>> orderList(ref Cursor cursor)
-        {
-            IParseResult<IList<string>> r0 = null;
-            var startCursor0 = cursor;
-            var l0 = new List<string>();
-            while (true)
-            {
-                var startCursor1 = cursor;
-                if (l0.Count > 0)
-                {
-                    IParseResult<string> r1 = null;
-                    r1 = this.comma(ref cursor);
-                    if (r1 == null)
-                    {
-                        break;
-                    }
-                }
-                IParseResult<string> r2 = null;
-                r2 = this.orderMember(ref cursor);
-                if (r2 != null)
-                {
-                    l0.Add(r2.Value);
-                }
-                else
-                {
-                    cursor = startCursor1;
-                    break;
-                }
-            }
-            if (l0.Count >= 1)
-            {
-                r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state => l0.AsReadOnly());
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> orderMember(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.Id(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<IList<string>> r2 = null;
-                var startCursor1 = cursor;
-                var l0 = new List<string>();
-                while (l0.Count < 1)
-                {
-                    IParseResult<string> r3 = null;
-                    if (r3 == null)
-                    {
-                        r3 = this.ParseLiteral(ref cursor, "ASC");
-                    }
-                    if (r3 == null)
-                    {
-                        r3 = this.ParseLiteral(ref cursor, "DESC");
-                    }
-                    if (r3 != null)
-                    {
-                        l0.Add(r3.Value);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                r2 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                if (r2 != null)
-                {
-                    {
-                        var len = cursor.Location - startCursor0.Location;
-                        r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                            state.Subject.Substring(startCursor0.Location, len)
-                            );
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> withClause(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                var startCursor0 = cursor;
-                IParseResult<string> r1 = null;
-                r1 = this.WITH(ref cursor);
-                if (r1 != null)
-                {
-                    IParseResult<string> r2 = null;
-                    r2 = this.PRIMARY(ref cursor);
-                    if (r2 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            if (r0 == null)
-            {
-                var startCursor1 = cursor;
-                IParseResult<string> r3 = null;
-                r3 = this.WITH(ref cursor);
-                if (r3 != null)
-                {
-                    IParseResult<string> r4 = null;
-                    r4 = this.ParseLiteral(ref cursor, "DISALLOW");
-                    if (r4 != null)
-                    {
-                        IParseResult<string> r5 = null;
-                        r5 = this.NULL(ref cursor);
-                        if (r5 != null)
-                        {
-                            {
-                                var len = cursor.Location - startCursor1.Location;
-                                r0 = this.ReturnHelper<string>(startCursor1, ref cursor, state =>
-                                    state.Subject.Substring(startCursor1.Location, len)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor1;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor1;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor1;
-                }
-            }
-            if (r0 == null)
-            {
-                var startCursor2 = cursor;
-                IParseResult<string> r6 = null;
-                r6 = this.WITH(ref cursor);
-                if (r6 != null)
-                {
-                    IParseResult<string> r7 = null;
-                    r7 = this.ParseLiteral(ref cursor, "IGNORE");
-                    if (r7 != null)
-                    {
-                        IParseResult<string> r8 = null;
-                        r8 = this.NULL(ref cursor);
-                        if (r8 != null)
-                        {
-                            {
-                                var len = cursor.Location - startCursor2.Location;
-                                r0 = this.ReturnHelper<string>(startCursor2, ref cursor, state =>
-                                    state.Subject.Substring(startCursor2.Location, len)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor2;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor2;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor2;
-                }
-            }
-            return r0;
-        }
-
-        private IParseResult<string> alterStmt(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.ALTER(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.TABLE(ref cursor);
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.Id(ref cursor);
-                    if (r3 != null)
-                    {
-                        IParseResult<string> r4 = null;
-                        r4 = this.alterCmd(ref cursor);
-                        if (r4 != null)
-                        {
-                            {
-                                var len = cursor.Location - startCursor0.Location;
-                                r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                    state.Subject.Substring(startCursor0.Location, len)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> alterCmd(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                var startCursor0 = cursor;
-                IParseResult<string> r1 = null;
-                r1 = this.ADD(ref cursor);
-                if (r1 != null)
-                {
-                    IParseResult<string> r2 = null;
-                    r2 = this.COLUMN(ref cursor);
-                    if (r2 != null)
-                    {
-                        IParseResult<IList<FieldNode>> r3 = null;
-                        r3 = this.fieldDefList(ref cursor);
-                        if (r3 != null)
-                        {
-                            IParseResult<IList<ConstraintNode>> r4 = null;
-                            r4 = this.constraintListOpt(ref cursor);
-                            if (r4 != null)
-                            {
-                                {
-                                    var len = cursor.Location - startCursor0.Location;
-                                    r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                        state.Subject.Substring(startCursor0.Location, len)
-                                        );
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor0;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            if (r0 == null)
-            {
-                var startCursor1 = cursor;
-                IParseResult<string> r5 = null;
-                r5 = this.ADD(ref cursor);
-                if (r5 != null)
-                {
-                    IParseResult<ConstraintNode> r6 = null;
-                    r6 = this.constraintDef(ref cursor);
-                    if (r6 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor1.Location;
-                            r0 = this.ReturnHelper<string>(startCursor1, ref cursor, state =>
-                                state.Subject.Substring(startCursor1.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor1;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor1;
-                }
-            }
-            if (r0 == null)
-            {
-                var startCursor2 = cursor;
-                IParseResult<string> r7 = null;
-                r7 = this.DROP(ref cursor);
-                if (r7 != null)
-                {
-                    IParseResult<string> r8 = null;
-                    r8 = this.COLUMN(ref cursor);
-                    if (r8 != null)
-                    {
-                        IParseResult<string> r9 = null;
-                        r9 = this.Id(ref cursor);
-                        if (r9 != null)
-                        {
-                            {
-                                var len = cursor.Location - startCursor2.Location;
-                                r0 = this.ReturnHelper<string>(startCursor2, ref cursor, state =>
-                                    state.Subject.Substring(startCursor2.Location, len)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor2;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor2;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor2;
-                }
-            }
-            if (r0 == null)
-            {
-                var startCursor3 = cursor;
-                IParseResult<string> r10 = null;
-                r10 = this.DROP(ref cursor);
-                if (r10 != null)
-                {
-                    IParseResult<string> r11 = null;
-                    r11 = this.CONSTRAINT(ref cursor);
-                    if (r11 != null)
-                    {
-                        IParseResult<string> r12 = null;
-                        r12 = this.Id(ref cursor);
-                        if (r12 != null)
-                        {
-                            {
-                                var len = cursor.Location - startCursor3.Location;
-                                r0 = this.ReturnHelper<string>(startCursor3, ref cursor, state =>
-                                    state.Subject.Substring(startCursor3.Location, len)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor3;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor3;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor3;
-                }
-            }
-            return r0;
-        }
-
-        private IParseResult<string> dropTableStmt(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.DROP(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.TABLE(ref cursor);
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.Id(ref cursor);
-                    if (r3 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> dropIndexStmt(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.DROP(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.INDEX(ref cursor);
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.Id(ref cursor);
-                    if (r3 != null)
-                    {
-                        IParseResult<string> r4 = null;
-                        r4 = this.ON(ref cursor);
-                        if (r4 != null)
-                        {
-                            IParseResult<string> r5 = null;
-                            r5 = this.Id(ref cursor);
-                            if (r5 != null)
-                            {
-                                {
-                                    var len = cursor.Location - startCursor0.Location;
-                                    r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                        state.Subject.Substring(startCursor0.Location, len)
-                                        );
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor0;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> insertStmt(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.INSERT(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<IList<string>> r2 = null;
-                var startCursor1 = cursor;
-                var l0 = new List<string>();
-                while (l0.Count < 1)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.INTO(ref cursor);
-                    if (r3 != null)
-                    {
-                        l0.Add(r3.Value);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                r2 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                if (r2 != null)
-                {
-                    IParseResult<string> r4 = null;
-                    r4 = this.Id(ref cursor);
-                    if (r4 != null)
-                    {
-                        IParseResult<IList<string>> r5 = null;
-                        r5 = this.idlistPar(ref cursor);
-                        if (r5 != null)
-                        {
-                            IParseResult<string> r6 = null;
-                            r6 = this.insertData(ref cursor);
-                            if (r6 != null)
-                            {
-                                {
-                                    var len = cursor.Location - startCursor0.Location;
-                                    r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                        state.Subject.Substring(startCursor0.Location, len)
-                                        );
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor0;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> insertData(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                r0 = this.selectStmt(ref cursor);
-            }
-            if (r0 == null)
-            {
-                var startCursor0 = cursor;
-                IParseResult<string> r1 = null;
-                r1 = this.VALUES(ref cursor);
-                if (r1 != null)
-                {
-                    IParseResult<string> r2 = null;
-                    r2 = this.ParseLiteral(ref cursor, "(");
-                    if (r2 != null)
-                    {
-                        IParseResult<IList<string>> r3 = null;
-                        r3 = this.exprList(ref cursor);
-                        if (r3 != null)
-                        {
-                            IParseResult<string> r4 = null;
-                            r4 = this.ParseLiteral(ref cursor, ")");
-                            if (r4 != null)
-                            {
-                                {
-                                    var len = cursor.Location - startCursor0.Location;
-                                    r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                        state.Subject.Substring(startCursor0.Location, len)
-                                        );
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor0;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            return r0;
-        }
-
-        private IParseResult<string> updateStmt(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.UPDATE(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.Id(ref cursor);
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.SET(ref cursor);
-                    if (r3 != null)
-                    {
-                        IParseResult<IList<string>> r4 = null;
-                        r4 = this.assignList(ref cursor);
-                        if (r4 != null)
-                        {
-                            IParseResult<IList<string>> r5 = null;
-                            var startCursor1 = cursor;
-                            var l0 = new List<string>();
-                            while (l0.Count < 1)
-                            {
-                                IParseResult<string> r6 = null;
-                                r6 = this.whereClause(ref cursor);
-                                if (r6 != null)
-                                {
-                                    l0.Add(r6.Value);
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-                            r5 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                            if (r5 != null)
-                            {
-                                {
-                                    var len = cursor.Location - startCursor0.Location;
-                                    r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                        state.Subject.Substring(startCursor0.Location, len)
-                                        );
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor0;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<IList<string>> assignList(ref Cursor cursor)
-        {
-            IParseResult<IList<string>> r0 = null;
-            var startCursor0 = cursor;
-            var l0 = new List<string>();
-            while (true)
-            {
-                var startCursor1 = cursor;
-                if (l0.Count > 0)
-                {
-                    IParseResult<string> r1 = null;
-                    r1 = this.comma(ref cursor);
-                    if (r1 == null)
-                    {
-                        break;
-                    }
-                }
-                IParseResult<string> r2 = null;
-                r2 = this.assignment(ref cursor);
-                if (r2 != null)
-                {
-                    l0.Add(r2.Value);
-                }
-                else
-                {
-                    cursor = startCursor1;
-                    break;
-                }
-            }
-            if (l0.Count >= 1)
-            {
-                r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state => l0.AsReadOnly());
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> assignment(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.Id(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.ParseLiteral(ref cursor, "=");
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.expression(ref cursor);
-                    if (r3 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> deleteStmt(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.DELETE(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.FROM(ref cursor);
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.Id(ref cursor);
-                    if (r3 != null)
-                    {
-                        IParseResult<IList<string>> r4 = null;
-                        var startCursor1 = cursor;
-                        var l0 = new List<string>();
-                        while (l0.Count < 1)
-                        {
-                            IParseResult<string> r5 = null;
-                            r5 = this.whereClause(ref cursor);
-                            if (r5 != null)
-                            {
-                                l0.Add(r5.Value);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        r4 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                        if (r4 != null)
-                        {
-                            {
-                                var len = cursor.Location - startCursor0.Location;
-                                r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                    state.Subject.Substring(startCursor0.Location, len)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> selectStmt(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                var startCursor0 = cursor;
-                IParseResult<string> r1 = null;
-                r1 = this.selectClause(ref cursor);
-                if (r1 != null)
-                {
-                    IParseResult<IList<string>> r2 = null;
-                    var startCursor1 = cursor;
-                    var l0 = new List<string>();
-                    while (l0.Count < 1)
-                    {
-                        IParseResult<string> r3 = null;
-                        r3 = this.fromClause(ref cursor);
-                        if (r3 != null)
-                        {
-                            l0.Add(r3.Value);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    r2 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                    if (r2 != null)
-                    {
-                        IParseResult<IList<string>> r4 = null;
-                        var startCursor2 = cursor;
-                        var l1 = new List<string>();
-                        while (l1.Count < 1)
-                        {
-                            IParseResult<string> r5 = null;
-                            r5 = this.whereClause(ref cursor);
-                            if (r5 != null)
-                            {
-                                l1.Add(r5.Value);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        r4 = this.ReturnHelper<IList<string>>(startCursor2, ref cursor, state => l1.AsReadOnly());
-                        if (r4 != null)
-                        {
-                            IParseResult<IList<string>> r6 = null;
-                            var startCursor3 = cursor;
-                            var l2 = new List<string>();
-                            while (l2.Count < 1)
-                            {
-                                IParseResult<string> r7 = null;
-                                r7 = this.groupClause(ref cursor);
-                                if (r7 != null)
-                                {
-                                    l2.Add(r7.Value);
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-                            r6 = this.ReturnHelper<IList<string>>(startCursor3, ref cursor, state => l2.AsReadOnly());
-                            if (r6 != null)
-                            {
-                                IParseResult<IList<string>> r8 = null;
-                                var startCursor4 = cursor;
-                                var l3 = new List<string>();
-                                while (l3.Count < 1)
-                                {
-                                    IParseResult<string> r9 = null;
-                                    r9 = this.havingClause(ref cursor);
-                                    if (r9 != null)
-                                    {
-                                        l3.Add(r9.Value);
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
-                                r8 = this.ReturnHelper<IList<string>>(startCursor4, ref cursor, state => l3.AsReadOnly());
-                                if (r8 != null)
-                                {
-                                    IParseResult<IList<string>> r10 = null;
-                                    var startCursor5 = cursor;
-                                    var l4 = new List<string>();
-                                    while (l4.Count < 1)
-                                    {
-                                        IParseResult<string> r11 = null;
-                                        r11 = this.orderClause(ref cursor);
-                                        if (r11 != null)
-                                        {
-                                            l4.Add(r11.Value);
-                                        }
-                                        else
-                                        {
-                                            break;
-                                        }
-                                    }
-                                    r10 = this.ReturnHelper<IList<string>>(startCursor5, ref cursor, state => l4.AsReadOnly());
-                                    if (r10 != null)
-                                    {
-                                        {
-                                            var len = cursor.Location - startCursor0.Location;
-                                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                                state.Subject.Substring(startCursor0.Location, len)
-                                                );
-                                        }
-                                    }
-                                    else
-                                    {
-                                        cursor = startCursor0;
-                                    }
-                                }
-                                else
-                                {
-                                    cursor = startCursor0;
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor0;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            if (r0 == null)
-            {
-                var startCursor6 = cursor;
-                IParseResult<string> r12 = null;
-                r12 = this.fromClause(ref cursor);
-                if (r12 != null)
-                {
-                    IParseResult<IList<string>> r13 = null;
-                    var startCursor7 = cursor;
-                    var l5 = new List<string>();
-                    while (l5.Count < 1)
-                    {
-                        IParseResult<string> r14 = null;
-                        r14 = this.whereClause(ref cursor);
-                        if (r14 != null)
-                        {
-                            l5.Add(r14.Value);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    r13 = this.ReturnHelper<IList<string>>(startCursor7, ref cursor, state => l5.AsReadOnly());
-                    if (r13 != null)
-                    {
-                        IParseResult<IList<string>> r15 = null;
-                        var startCursor8 = cursor;
-                        var l6 = new List<string>();
-                        while (l6.Count < 1)
-                        {
-                            IParseResult<string> r16 = null;
-                            r16 = this.groupClause(ref cursor);
-                            if (r16 != null)
-                            {
-                                l6.Add(r16.Value);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        r15 = this.ReturnHelper<IList<string>>(startCursor8, ref cursor, state => l6.AsReadOnly());
-                        if (r15 != null)
-                        {
-                            IParseResult<IList<string>> r17 = null;
-                            var startCursor9 = cursor;
-                            var l7 = new List<string>();
-                            while (l7.Count < 1)
-                            {
-                                IParseResult<string> r18 = null;
-                                r18 = this.havingClause(ref cursor);
-                                if (r18 != null)
-                                {
-                                    l7.Add(r18.Value);
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-                            r17 = this.ReturnHelper<IList<string>>(startCursor9, ref cursor, state => l7.AsReadOnly());
-                            if (r17 != null)
-                            {
-                                IParseResult<IList<string>> r19 = null;
-                                var startCursor10 = cursor;
-                                var l8 = new List<string>();
-                                while (l8.Count < 1)
-                                {
-                                    IParseResult<string> r20 = null;
-                                    r20 = this.orderClause(ref cursor);
-                                    if (r20 != null)
-                                    {
-                                        l8.Add(r20.Value);
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
-                                r19 = this.ReturnHelper<IList<string>>(startCursor10, ref cursor, state => l8.AsReadOnly());
-                                if (r19 != null)
-                                {
-                                    IParseResult<string> r21 = null;
-                                    r21 = this.selectClause(ref cursor);
-                                    if (r21 != null)
-                                    {
-                                        {
-                                            var len = cursor.Location - startCursor6.Location;
-                                            r0 = this.ReturnHelper<string>(startCursor6, ref cursor, state =>
-                                                state.Subject.Substring(startCursor6.Location, len)
-                                                );
-                                        }
-                                    }
-                                    else
-                                    {
-                                        cursor = startCursor6;
-                                    }
-                                }
-                                else
-                                {
-                                    cursor = startCursor6;
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor6;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor6;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor6;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor6;
-                }
-            }
-            return r0;
-        }
-
-        private IParseResult<string> selectClause(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.SELECT(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<IList<string>> r2 = null;
-                var startCursor1 = cursor;
-                var l0 = new List<string>();
-                while (l0.Count < 1)
-                {
-                    IParseResult<string> r3 = null;
-                    if (r3 == null)
-                    {
-                        r3 = this.ParseLiteral(ref cursor, "ALL");
-                    }
-                    if (r3 == null)
-                    {
-                        r3 = this.ParseLiteral(ref cursor, "DISTINCT");
-                    }
-                    if (r3 != null)
-                    {
-                        l0.Add(r3.Value);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                r2 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                if (r2 != null)
-                {
-                    IParseResult<IList<string>> r4 = null;
-                    r4 = this.selList(ref cursor);
-                    if (r4 != null)
-                    {
-                        IParseResult<IList<string>> r5 = null;
-                        var startCursor2 = cursor;
-                        var l1 = new List<string>();
-                        while (l1.Count < 1)
-                        {
-                            IParseResult<string> r6 = null;
-                            var startCursor3 = cursor;
-                            IParseResult<string> r7 = null;
-                            r7 = this.INTO(ref cursor);
-                            if (r7 != null)
-                            {
-                                IParseResult<string> r8 = null;
-                                r8 = this.Id(ref cursor);
-                                if (r8 != null)
-                                {
-                                    {
-                                        var len = cursor.Location - startCursor3.Location;
-                                        r6 = this.ReturnHelper<string>(startCursor3, ref cursor, state =>
-                                            state.Subject.Substring(startCursor3.Location, len)
-                                            );
-                                    }
-                                }
-                                else
-                                {
-                                    cursor = startCursor3;
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor3;
-                            }
-                            if (r6 != null)
-                            {
-                                l1.Add(r6.Value);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        r5 = this.ReturnHelper<IList<string>>(startCursor2, ref cursor, state => l1.AsReadOnly());
-                        if (r5 != null)
-                        {
-                            {
-                                var len = cursor.Location - startCursor0.Location;
-                                r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                    state.Subject.Substring(startCursor0.Location, len)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<IList<string>> selList(ref Cursor cursor)
-        {
-            IParseResult<IList<string>> r0 = null;
-            if (r0 == null)
-            {
-                r0 = this.columnItemList(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "*");
-            }
-            return r0;
-        }
-
-        private IParseResult<IList<string>> columnItemList(ref Cursor cursor)
-        {
-            IParseResult<IList<string>> r0 = null;
-            var startCursor0 = cursor;
-            var l0 = new List<string>();
-            while (true)
-            {
-                var startCursor1 = cursor;
-                if (l0.Count > 0)
-                {
-                    IParseResult<string> r1 = null;
-                    r1 = this.comma(ref cursor);
-                    if (r1 == null)
-                    {
-                        break;
-                    }
-                }
-                IParseResult<string> r2 = null;
-                r2 = this.columnItem(ref cursor);
-                if (r2 != null)
-                {
-                    l0.Add(r2.Value);
-                }
-                else
-                {
-                    cursor = startCursor1;
-                    break;
-                }
-            }
-            if (l0.Count >= 1)
-            {
-                r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state => l0.AsReadOnly());
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> columnItem(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                r0 = this.projectionRef(ref cursor);
-            }
-            if (r0 == null)
-            {
-                var startCursor0 = cursor;
-                IParseResult<string> r1 = null;
-                r1 = this.columnSource(ref cursor);
-                if (r1 != null)
-                {
-                    IParseResult<IList<string>> r2 = null;
-                    var startCursor1 = cursor;
-                    var l0 = new List<string>();
-                    while (l0.Count < 1)
-                    {
-                        IParseResult<string> r3 = null;
-                        var startCursor2 = cursor;
-                        IParseResult<IList<string>> r4 = null;
-                        var startCursor3 = cursor;
-                        var l1 = new List<string>();
-                        while (l1.Count < 1)
-                        {
-                            IParseResult<string> r5 = null;
-                            r5 = this.AS(ref cursor);
-                            if (r5 != null)
-                            {
-                                l1.Add(r5.Value);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        r4 = this.ReturnHelper<IList<string>>(startCursor3, ref cursor, state => l1.AsReadOnly());
-                        if (r4 != null)
-                        {
-                            IParseResult<string> r6 = null;
-                            r6 = this.Id(ref cursor);
-                            if (r6 != null)
-                            {
-                                {
-                                    var len = cursor.Location - startCursor2.Location;
-                                    r3 = this.ReturnHelper<string>(startCursor2, ref cursor, state =>
-                                        state.Subject.Substring(startCursor2.Location, len)
-                                        );
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor2;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor2;
-                        }
-                        if (r3 != null)
-                        {
-                            l0.Add(r3.Value);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    r2 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                    if (r2 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            return r0;
-        }
-
-        private IParseResult<string> columnSource(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                r0 = this.aggregate(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.Id(ref cursor);
-            }
-            return r0;
-        }
-
-        private IParseResult<string> aggregate(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.aggregateName(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.ParseLiteral(ref cursor, "(");
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.aggregateArg(ref cursor);
-                    if (r3 != null)
-                    {
-                        IParseResult<string> r4 = null;
-                        r4 = this.ParseLiteral(ref cursor, ")");
-                        if (r4 != null)
-                        {
-                            {
-                                var len = cursor.Location - startCursor0.Location;
-                                r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                    state.Subject.Substring(startCursor0.Location, len)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> aggregateArg(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                r0 = this.expression(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "*");
-            }
-            return r0;
-        }
-
-        private IParseResult<string> aggregateName(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                r0 = this.COUNT(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "AVG");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "MIN");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "MAX");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "STDEV");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "STDEVP");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "SUM");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "VAR");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "VARP");
-            }
-            return r0;
-        }
-
-        private IParseResult<string> fromClause(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.FROM(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<IList<string>> r2 = null;
-                r2 = this.idlist(ref cursor);
-                if (r2 != null)
-                {
-                    IParseResult<IList<string>> r3 = null;
-                    var startCursor1 = cursor;
-                    var l0 = new List<string>();
-                    while (l0.Count < 1)
-                    {
-                        IParseResult<string> r4 = null;
-                        r4 = this.joinChain(ref cursor);
-                        if (r4 != null)
-                        {
-                            l0.Add(r4.Value);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    r3 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                    if (r3 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> joinChain(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<IList<string>> r1 = null;
-            var startCursor1 = cursor;
-            var l0 = new List<string>();
-            while (l0.Count < 1)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.joinKind(ref cursor);
-                if (r2 != null)
-                {
-                    l0.Add(r2.Value);
-                }
-                else
-                {
-                    break;
-                }
-            }
-            r1 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-            if (r1 != null)
-            {
-                IParseResult<string> r3 = null;
-                r3 = this.JOIN(ref cursor);
-                if (r3 != null)
-                {
-                    IParseResult<IList<string>> r4 = null;
-                    r4 = this.idlist(ref cursor);
-                    if (r4 != null)
-                    {
-                        IParseResult<string> r5 = null;
-                        r5 = this.ON(ref cursor);
-                        if (r5 != null)
-                        {
-                            IParseResult<string> r6 = null;
-                            r6 = this.Id(ref cursor);
-                            if (r6 != null)
-                            {
-                                IParseResult<string> r7 = null;
-                                r7 = this.ParseLiteral(ref cursor, "=");
-                                if (r7 != null)
-                                {
-                                    IParseResult<string> r8 = null;
-                                    r8 = this.Id(ref cursor);
-                                    if (r8 != null)
-                                    {
-                                        {
-                                            var len = cursor.Location - startCursor0.Location;
-                                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                                state.Subject.Substring(startCursor0.Location, len)
-                                                );
-                                        }
-                                    }
-                                    else
-                                    {
-                                        cursor = startCursor0;
-                                    }
-                                }
-                                else
-                                {
-                                    cursor = startCursor0;
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor0;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> joinKind(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "INNER");
-            }
-            if (r0 == null)
-            {
-                var startCursor0 = cursor;
-                IParseResult<string> r1 = null;
-                r1 = this.ParseLiteral(ref cursor, "LEFT");
-                if (r1 != null)
-                {
-                    IParseResult<IList<string>> r2 = null;
-                    var startCursor1 = cursor;
-                    var l0 = new List<string>();
-                    while (l0.Count < 1)
-                    {
-                        IParseResult<string> r3 = null;
-                        r3 = this.ParseLiteral(ref cursor, "OUTER");
-                        if (r3 != null)
-                        {
-                            l0.Add(r3.Value);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    r2 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                    if (r2 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            if (r0 == null)
-            {
-                var startCursor2 = cursor;
-                IParseResult<string> r4 = null;
-                r4 = this.ParseLiteral(ref cursor, "RIGHT");
-                if (r4 != null)
-                {
-                    IParseResult<IList<string>> r5 = null;
-                    var startCursor3 = cursor;
-                    var l1 = new List<string>();
-                    while (l1.Count < 1)
-                    {
-                        IParseResult<string> r6 = null;
-                        r6 = this.ParseLiteral(ref cursor, "OUTER");
-                        if (r6 != null)
-                        {
-                            l1.Add(r6.Value);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    r5 = this.ReturnHelper<IList<string>>(startCursor3, ref cursor, state => l1.AsReadOnly());
-                    if (r5 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor2.Location;
-                            r0 = this.ReturnHelper<string>(startCursor2, ref cursor, state =>
-                                state.Subject.Substring(startCursor2.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor2;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor2;
-                }
-            }
-            return r0;
-        }
-
-        private IParseResult<string> whereClause(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.ParseLiteral(ref cursor, "WHERE");
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.expression(ref cursor);
-                if (r2 != null)
-                {
-                    {
-                        var len = cursor.Location - startCursor0.Location;
-                        r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                            state.Subject.Substring(startCursor0.Location, len)
-                            );
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> groupClause(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.ParseLiteral(ref cursor, "GROUP");
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.BY(ref cursor);
-                if (r2 != null)
-                {
-                    IParseResult<IList<string>> r3 = null;
-                    r3 = this.idlist(ref cursor);
-                    if (r3 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> havingClause(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.ParseLiteral(ref cursor, "HAVING");
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.expression(ref cursor);
-                if (r2 != null)
-                {
-                    {
-                        var len = cursor.Location - startCursor0.Location;
-                        r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                            state.Subject.Substring(startCursor0.Location, len)
-                            );
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> orderClause(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.ParseLiteral(ref cursor, "ORDER");
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.BY(ref cursor);
-                if (r2 != null)
-                {
-                    IParseResult<IList<string>> r3 = null;
-                    r3 = this.orderList(ref cursor);
-                    if (r3 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> projectionDecl(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.PROJECTION(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.Id_simple(ref cursor);
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.ParseLiteral(ref cursor, "(");
-                    if (r3 != null)
-                    {
-                        IParseResult<IList<string>> r4 = null;
-                        r4 = this.selList(ref cursor);
-                        if (r4 != null)
-                        {
-                            IParseResult<string> r5 = null;
-                            r5 = this.ParseLiteral(ref cursor, ")");
-                            if (r5 != null)
-                            {
-                                {
-                                    var len = cursor.Location - startCursor0.Location;
-                                    r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                        state.Subject.Substring(startCursor0.Location, len)
-                                        );
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor0;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> projectionRef(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                var startCursor0 = cursor;
-                IParseResult<string> r1 = null;
-                r1 = this.ParseLiteral(ref cursor, "<");
-                if (r1 != null)
-                {
-                    IParseResult<string> r2 = null;
-                    r2 = this.Id_simple(ref cursor);
-                    if (r2 != null)
-                    {
-                        IParseResult<string> r3 = null;
-                        r3 = this.ParseLiteral(ref cursor, ">");
-                        if (r3 != null)
-                        {
-                            {
-                                var len = cursor.Location - startCursor0.Location;
-                                r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                    state.Subject.Substring(startCursor0.Location, len)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            if (r0 == null)
-            {
-                var startCursor1 = cursor;
-                IParseResult<string> r4 = null;
-                r4 = this.Id_simple(ref cursor);
-                if (r4 != null)
-                {
-                    IParseResult<string> r5 = null;
-                    r5 = this.dot(ref cursor);
-                    if (r5 != null)
-                    {
-                        IParseResult<string> r6 = null;
-                        r6 = this.ParseLiteral(ref cursor, "<");
-                        if (r6 != null)
-                        {
-                            IParseResult<string> r7 = null;
-                            r7 = this.Id_simple(ref cursor);
-                            if (r7 != null)
-                            {
-                                IParseResult<string> r8 = null;
-                                r8 = this.ParseLiteral(ref cursor, ">");
-                                if (r8 != null)
-                                {
-                                    {
-                                        var len = cursor.Location - startCursor1.Location;
-                                        r0 = this.ReturnHelper<string>(startCursor1, ref cursor, state =>
-                                            state.Subject.Substring(startCursor1.Location, len)
-                                            );
-                                    }
-                                }
-                                else
-                                {
-                                    cursor = startCursor1;
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor1;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor1;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor1;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor1;
-                }
-            }
-            return r0;
-        }
-
-        private IParseResult<IList<string>> exprList(ref Cursor cursor)
-        {
-            IParseResult<IList<string>> r0 = null;
-            var startCursor0 = cursor;
-            var l0 = new List<string>();
-            while (true)
-            {
-                var startCursor1 = cursor;
-                if (l0.Count > 0)
-                {
-                    IParseResult<string> r1 = null;
-                    r1 = this.comma(ref cursor);
-                    if (r1 == null)
-                    {
-                        break;
-                    }
-                }
-                IParseResult<string> r2 = null;
-                r2 = this.expression(ref cursor);
-                if (r2 != null)
-                {
-                    l0.Add(r2.Value);
-                }
-                else
-                {
-                    cursor = startCursor1;
-                    break;
-                }
-            }
-            if (l0.Count >= 1)
-            {
-                r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state => l0.AsReadOnly());
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> expression(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var storageKey = "expression:" + cursor.StateKey + ":" + cursor.Location;
-            if (this.storage.ContainsKey(storageKey))
-            {
-                r0 = (IParseResult<string>)this.storage[storageKey];
-                if (r0 != null)
-                {
-                    cursor = r0.EndCursor;
-                }
-                return r0;
-            }
-            this.storage[storageKey] = null;
-            var startCursor0 = cursor;
-            while (true)
-            {
-                IParseResult<string> r1 = null;
-                if (r1 == null)
-                {
-                    r1 = this.term(ref cursor);
-                }
-                if (r1 == null)
-                {
-                    r1 = this.unExpr(ref cursor);
-                }
-                if (r1 == null)
-                {
-                    r1 = this.binExpr(ref cursor);
-                }
-                if (r1 == null || (r0 != null && r0.EndCursor.Location >= r1.EndCursor.Location))
-                {
-                    break;
-                }
-                this.storage[storageKey] = r0 = r1;
-                cursor = startCursor0;
-            }
-            if (r0 != null)
-            {
-                cursor = r0.EndCursor;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> term(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                r0 = this.Id(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.string_literal(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.number(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.funCall(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.tuple(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.parSelectStmt(ref cursor);
-            }
-            return r0;
-        }
-
-        private IParseResult<string> tuple(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.ParseLiteral(ref cursor, "(");
-            if (r1 != null)
-            {
-                IParseResult<IList<string>> r2 = null;
-                r2 = this.exprList(ref cursor);
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.ParseLiteral(ref cursor, ")");
-                    if (r3 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> parSelectStmt(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.ParseLiteral(ref cursor, "(");
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.selectStmt(ref cursor);
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.ParseLiteral(ref cursor, ")");
-                    if (r3 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> unExpr(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.unOp(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.term(ref cursor);
-                if (r2 != null)
-                {
-                    {
-                        var len = cursor.Location - startCursor0.Location;
-                        r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                            state.Subject.Substring(startCursor0.Location, len)
-                            );
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> unOp(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                r0 = this.NOT(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "+");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "-");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "~");
-            }
-            return r0;
-        }
-
-        private IParseResult<string> binExpr(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var storageKey = "binExpr:" + cursor.StateKey + ":" + cursor.Location;
-            if (this.storage.ContainsKey(storageKey))
-            {
-                r0 = (IParseResult<string>)this.storage[storageKey];
-                if (r0 != null)
-                {
-                    cursor = r0.EndCursor;
-                }
-                return r0;
-            }
-            this.storage[storageKey] = null;
-            var startCursor0 = cursor;
-            while (true)
-            {
-                IParseResult<string> r1 = null;
-                var startCursor1 = cursor;
-                IParseResult<string> r2 = null;
-                r2 = this.expression(ref cursor);
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.binOp(ref cursor);
-                    if (r3 != null)
-                    {
-                        IParseResult<string> r4 = null;
-                        r4 = this.expression(ref cursor);
-                        if (r4 != null)
-                        {
-                            {
-                                var len = cursor.Location - startCursor1.Location;
-                                r1 = this.ReturnHelper<string>(startCursor1, ref cursor, state =>
-                                    state.Subject.Substring(startCursor1.Location, len)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor1;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor1;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor1;
-                }
-                if (r1 == null || (r0 != null && r0.EndCursor.Location >= r1.EndCursor.Location))
-                {
-                    break;
-                }
-                this.storage[storageKey] = r0 = r1;
-                cursor = startCursor0;
-            }
-            if (r0 != null)
-            {
-                cursor = r0.EndCursor;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> binOp(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "+");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "-");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "*");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "/");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "%");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "&");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "|");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "^");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "=");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, ">");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "<");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, ">=");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "<>");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "!=");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "!<");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "!>");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "AND");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "OR");
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "LIKE");
-            }
-            if (r0 == null)
-            {
-                var startCursor0 = cursor;
-                IParseResult<string> r1 = null;
-                r1 = this.NOT(ref cursor);
-                if (r1 != null)
-                {
-                    IParseResult<string> r2 = null;
-                    r2 = this.ParseLiteral(ref cursor, "LIKE");
-                    if (r2 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            if (r0 == null)
-            {
-                r0 = this.ParseLiteral(ref cursor, "IN");
-            }
-            if (r0 == null)
-            {
-                var startCursor1 = cursor;
-                IParseResult<string> r3 = null;
-                r3 = this.NOT(ref cursor);
-                if (r3 != null)
-                {
-                    IParseResult<string> r4 = null;
-                    r4 = this.ParseLiteral(ref cursor, "IN");
-                    if (r4 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor1.Location;
-                            r0 = this.ReturnHelper<string>(startCursor1, ref cursor, state =>
-                                state.Subject.Substring(startCursor1.Location, len)
-                                );
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor1;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor1;
-                }
-            }
-            return r0;
-        }
-
-        private IParseResult<string> betweenExpr(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.expression(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<IList<string>> r2 = null;
-                var startCursor1 = cursor;
-                var l0 = new List<string>();
-                while (l0.Count < 1)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.NOT(ref cursor);
-                    if (r3 != null)
-                    {
-                        l0.Add(r3.Value);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                r2 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                if (r2 != null)
-                {
-                    IParseResult<string> r4 = null;
-                    r4 = this.ParseLiteral(ref cursor, "BETWEEN");
-                    if (r4 != null)
-                    {
-                        IParseResult<string> r5 = null;
-                        r5 = this.expression(ref cursor);
-                        if (r5 != null)
-                        {
-                            IParseResult<string> r6 = null;
-                            r6 = this.ParseLiteral(ref cursor, "AND");
-                            if (r6 != null)
-                            {
-                                IParseResult<string> r7 = null;
-                                r7 = this.expression(ref cursor);
-                                if (r7 != null)
-                                {
-                                    {
-                                        var len = cursor.Location - startCursor0.Location;
-                                        r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                            state.Subject.Substring(startCursor0.Location, len)
-                                            );
-                                    }
-                                }
-                                else
-                                {
-                                    cursor = startCursor0;
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor0;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> funCall(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.Id(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.ParseLiteral(ref cursor, "(");
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.funArgs(ref cursor);
-                    if (r3 != null)
-                    {
-                        IParseResult<string> r4 = null;
-                        r4 = this.ParseLiteral(ref cursor, ")");
-                        if (r4 != null)
-                        {
-                            {
-                                var len = cursor.Location - startCursor0.Location;
-                                r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                    state.Subject.Substring(startCursor0.Location, len)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
-        private IParseResult<string> funArgs(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            if (r0 == null)
-            {
-                r0 = this.selectStmt(ref cursor);
-            }
-            if (r0 == null)
-            {
-                r0 = this.exprList(ref cursor);
-            }
-            return r0;
-        }
-
-        private IParseResult<string> inStmt(ref Cursor cursor)
-        {
-            IParseResult<string> r0 = null;
-            var startCursor0 = cursor;
-            IParseResult<string> r1 = null;
-            r1 = this.expression(ref cursor);
-            if (r1 != null)
-            {
-                IParseResult<string> r2 = null;
-                r2 = this.ParseLiteral(ref cursor, "IN");
-                if (r2 != null)
-                {
-                    IParseResult<string> r3 = null;
-                    r3 = this.ParseLiteral(ref cursor, "(");
-                    if (r3 != null)
-                    {
-                        IParseResult<IList<string>> r4 = null;
-                        r4 = this.exprList(ref cursor);
-                        if (r4 != null)
-                        {
-                            IParseResult<string> r5 = null;
-                            r5 = this.ParseLiteral(ref cursor, ")");
-                            if (r5 != null)
-                            {
-                                {
-                                    var len = cursor.Location - startCursor0.Location;
-                                    r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                        state.Subject.Substring(startCursor0.Location, len)
-                                        );
-                                }
-                            }
-                            else
-                            {
-                                cursor = startCursor0;
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor0;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor0;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor0;
-                }
-            }
-            else
-            {
-                cursor = startCursor0;
-            }
-            return r0;
-        }
-
         private IParseResult<string> dot(ref Cursor cursor)
         {
             IParseResult<string> r0 = null;
@@ -3919,7 +1432,7 @@ namespace
         }
 
         private IParseResult<
-            #line 71 "Grammar.peg"
+            #line 27 "Grammar.peg"
            string
             #line default
             > Id_simple(ref Cursor cursor)
@@ -3928,23 +1441,57 @@ namespace
             if (r0 == null)
             {
                 var startCursor0 = cursor;
-                var l0 = new List<string>();
-                while (true)
+                IParseResult<
+                    #line 27 "Grammar.peg"
+                       string
+                    #line default
+                    > r1 = null;
+                var startCursor1 = cursor;
                 {
-                    IParseResult<string> r1 = null;
-                    r1 = this.ParseClass(ref cursor, "AZ");
-                    if (r1 != null)
+                    var len = cursor.Location - startCursor1.Location;
+                    r1 = this.ReturnHelper<string>(startCursor1, ref cursor, state =>
+                        state.Subject.Substring(startCursor1.Location, len)
+                        );
+                }
+                if (r1 != null)
+                {
+                    IParseResult<IList<string>> r2 = null;
+                    var startCursor2 = cursor;
+                    var l0 = new List<string>();
+                    while (true)
                     {
-                        l0.Add(r1.Value);
+                        IParseResult<string> r3 = null;
+                        r3 = this.ParseClass(ref cursor, "AZ");
+                        if (r3 != null)
+                        {
+                            l0.Add(r3.Value);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    if (l0.Count >= 1)
+                    {
+                        r2 = this.ReturnHelper<IList<string>>(startCursor2, ref cursor, state => l0.AsReadOnly());
                     }
                     else
                     {
-                        break;
+                        cursor = startCursor2;
                     }
-                }
-                if (l0.Count >= 1)
-                {
-                    r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state => l0.AsReadOnly());
+                    if (r2 != null)
+                    {
+                        {
+                            var len = cursor.Location - startCursor0.Location;
+                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
+                                state.Subject.Substring(startCursor0.Location, len)
+                                );
+                        }
+                    }
+                    else
+                    {
+                        cursor = startCursor0;
+                    }
                 }
                 else
                 {
@@ -3953,85 +1500,33 @@ namespace
             }
             if (r0 == null)
             {
-                var startCursor1 = cursor;
-                IParseResult<string> r2 = null;
-                r2 = this.ParseLiteral(ref cursor, "[");
-                if (r2 != null)
+                var startCursor3 = cursor;
+                IParseResult<string> r4 = null;
+                r4 = this.ParseLiteral(ref cursor, "[");
+                if (r4 != null)
                 {
-                    IParseResult<IList<string>> r3 = null;
-                    var startCursor2 = cursor;
+                    IParseResult<IList<string>> r5 = null;
+                    var startCursor4 = cursor;
                     var l1 = new List<string>();
                     while (true)
                     {
-                        IParseResult<string> r4 = null;
-                        r4 = this.ParseClass(ref cursor, "AZ");
-                        if (r4 != null)
+                        IParseResult<string> r6 = null;
+                        r6 = this.ParseClass(ref cursor, "AZ");
+                        if (r6 != null)
                         {
-                            l1.Add(r4.Value);
+                            l1.Add(r6.Value);
                         }
                         else
                         {
                             break;
                         }
                     }
-                    r3 = this.ReturnHelper<IList<string>>(startCursor2, ref cursor, state => l1.AsReadOnly());
-                    if (r3 != null)
+                    r5 = this.ReturnHelper<IList<string>>(startCursor4, ref cursor, state => l1.AsReadOnly());
+                    if (r5 != null)
                     {
-                        IParseResult<string> r5 = null;
-                        r5 = this.ParseLiteral(ref cursor, "]");
-                        if (r5 != null)
-                        {
-                            {
-                                var len = cursor.Location - startCursor1.Location;
-                                r0 = this.ReturnHelper<string>(startCursor1, ref cursor, state =>
-                                    state.Subject.Substring(startCursor1.Location, len)
-                                    );
-                            }
-                        }
-                        else
-                        {
-                            cursor = startCursor1;
-                        }
-                    }
-                    else
-                    {
-                        cursor = startCursor1;
-                    }
-                }
-                else
-                {
-                    cursor = startCursor1;
-                }
-            }
-            if (r0 == null)
-            {
-                var startCursor3 = cursor;
-                IParseResult<string> r6 = null;
-                r6 = this.ParseClass(ref cursor, "\"\"");
-                if (r6 != null)
-                {
-                    IParseResult<IList<string>> r7 = null;
-                    var startCursor4 = cursor;
-                    var l2 = new List<string>();
-                    while (true)
-                    {
-                        IParseResult<string> r8 = null;
-                        r8 = this.ParseClass(ref cursor, "AZ");
-                        if (r8 != null)
-                        {
-                            l2.Add(r8.Value);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    r7 = this.ReturnHelper<IList<string>>(startCursor4, ref cursor, state => l2.AsReadOnly());
-                    if (r7 != null)
-                    {
-                        IParseResult<string> r9 = null;
-                        r9 = this.ParseClass(ref cursor, "\"\"");
-                        if (r9 != null)
+                        IParseResult<string> r7 = null;
+                        r7 = this.ParseLiteral(ref cursor, "]");
+                        if (r7 != null)
                         {
                             {
                                 var len = cursor.Location - startCursor3.Location;
@@ -4053,6 +1548,58 @@ namespace
                 else
                 {
                     cursor = startCursor3;
+                }
+            }
+            if (r0 == null)
+            {
+                var startCursor5 = cursor;
+                IParseResult<string> r8 = null;
+                r8 = this.ParseClass(ref cursor, "\"\"");
+                if (r8 != null)
+                {
+                    IParseResult<IList<string>> r9 = null;
+                    var startCursor6 = cursor;
+                    var l2 = new List<string>();
+                    while (true)
+                    {
+                        IParseResult<string> r10 = null;
+                        r10 = this.ParseClass(ref cursor, "AZ");
+                        if (r10 != null)
+                        {
+                            l2.Add(r10.Value);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    r9 = this.ReturnHelper<IList<string>>(startCursor6, ref cursor, state => l2.AsReadOnly());
+                    if (r9 != null)
+                    {
+                        IParseResult<string> r11 = null;
+                        r11 = this.ParseClass(ref cursor, "\"\"");
+                        if (r11 != null)
+                        {
+                            {
+                                var len = cursor.Location - startCursor5.Location;
+                                r0 = this.ReturnHelper<string>(startCursor5, ref cursor, state =>
+                                    state.Subject.Substring(startCursor5.Location, len)
+                                    );
+                            }
+                        }
+                        else
+                        {
+                            cursor = startCursor5;
+                        }
+                    }
+                    else
+                    {
+                        cursor = startCursor5;
+                    }
+                }
+                else
+                {
+                    cursor = startCursor5;
                 }
             }
             return r0;
@@ -4194,6 +1741,35 @@ namespace
             {
                 cursor = startCursor0;
             }
+            return r0;
+        }
+
+        private IParseResult<string> ws(ref Cursor cursor)
+        {
+            IParseResult<string> r0 = null;
+            r0 = this.ParseClass(ref cursor, "  \t\t\n\n\r\r");
+            return r0;
+        }
+
+        private IParseResult<IList<string>> ows(ref Cursor cursor)
+        {
+            IParseResult<IList<string>> r0 = null;
+            var startCursor0 = cursor;
+            var l0 = new List<string>();
+            while (true)
+            {
+                IParseResult<string> r1 = null;
+                r1 = this.ws(ref cursor);
+                if (r1 != null)
+                {
+                    l0.Add(r1.Value);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state => l0.AsReadOnly());
             return r0;
         }
 
