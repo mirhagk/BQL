@@ -13,14 +13,21 @@ namespace BQLPEG
         {
             testSQL = testSQL.ToUpper();
             var grammar = new Grammar();
+            var generator = new SQLGenerator();
             Console.WriteLine(testSQL);
+            IEnumerable<Nodes.StatementNode> parseResult = null;
             try
             {
-                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(grammar.Parse(testSQL)));
+                parseResult = grammar.Parse(testSQL);
             }
             catch
             {
                 Console.WriteLine("Failed to parse");
+            }
+            if (parseResult != null)
+            {
+                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parseResult));
+                Console.WriteLine(generator.GenerateSQL(parseResult));
             }
             Console.ReadKey();
         }
