@@ -23,9 +23,17 @@ namespace BQLPEG
                 if (!debug || result)
                     return result;
                 Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parseResult));
-                Console.WriteLine(testSQL);
-                Console.WriteLine(sql);
+                Console.WriteLine("Expected: " + sql);
+                Console.WriteLine("Actual: "+ testSQL);
                 return result;
+            }
+            catch (FormatException ex)
+            {
+                if (debug)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                return false;
             }
             catch
             {
@@ -34,13 +42,17 @@ namespace BQLPEG
         }
         static void RunAllTests()
         {
+            int passed = 0;
+            int total = 0;
             foreach(var test in Directory.EnumerateFiles("tests","*.bql"))
             {
+                total++;
                 Console.WriteLine("Running test {0}", test);
                 var result = RunTest(test, true);
                 var consoleColor = Console.ForegroundColor;
                 if (result)
                 {
+                    passed++;
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Success");
                 }
@@ -52,6 +64,7 @@ namespace BQLPEG
                 Console.WriteLine("===============");
                 Console.ForegroundColor = consoleColor;
             }
+            Console.WriteLine("All tests concluded, passed {0} out of {1}", passed, total);
         }
         static string testSQL = @"CREATE TABLE Test ( a INT NOT NULL, b INT NULL, c NVARCHAR(50))";
         static void Main(string[] args)
