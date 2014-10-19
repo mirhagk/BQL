@@ -8,14 +8,13 @@ stmtList <IEnumerable<StatementNode>> = stmtLine+
 Id <string> = id:Id_simple<1,,dot> { string.Concat(id)}
 stmt <StatementNode> = createTableStmt / ("GO" {new GoStatementNode()})
 oldCreateTableStmt <CreateTableNode> = CREATE ows TABLE ows id:Id ows{new CreateTableNode{Name=id}}
-createTableStmt <CreateTableNode> = CREATE ows TABLE ows id:Id ows "(" ows fields:fieldDefList ows ")" ows constraints:constraintListOpt {new CreateTableNode{Name=id, Fields=fields, Constraints = constraints}}
-fieldDefList = fieldDef<1,,(ows comma ows)>
+createTableStmt <CreateTableNode> = CREATE ows TABLE ows id:Id ows "(" ows fields:tableDefList ows ")" {new CreateTableNode{Name=id, Fields=fields.Where(f=>f is FieldNode).Cast<FieldNode>(), Constraints=fields.Where(f=>f is ConstraintNode).Cast<ConstraintNode>()}}
+tableDefList = (<ITableDefNode> fieldDef / constraintDef)<1,,(ows comma ows)>
 fieldDef <FieldNode> = id:Id ows type:typeName ows typeParams:typeParams? ows nullval:nullOpt {new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=nullval}}
 typeName = "BIT" / "DATE" / "TIME" / "TIMESTAMP" / "DECIMAL" / "REAL" / "FLOAT" / "SMALLINT" / "INTEGER" / "INTERVAL" / "CHARACTER" / "DATETIME" / "INT" / "DOUBLE" / "CHAR" / "NCHAR" / "VARCHAR" / "NVARCHAR" / "IMAGE" / "TEXT" / "NTEXT"
 typeParams <IEnumerable<int>> = "(" ows num:number ows ")" { new int[]{int.Parse(num)}}/ "(" ows num1:number ows comma ows num2:number ")" {new int[]{int.Parse(num1),int.Parse(num2)}}
 nullOpt <bool> = val:(<bool>NULL {true}/ NOT ows NULL{false})? {val.Any()?val.Single():true} 
 constraintDef <ConstraintNode> = CONSTRAINT ws id:Id ws constraintType:constraintTypeOpt {new ConstraintNode{ Name=id, ConstraintType=constraintType}}
-constraintListOpt = constraintDef*
 constraintTypeOpt <ConstraintTypeNode> = PRIMARY KEY ids:idlistPar {new PKConstraintTypeNode{Ids=ids}}/ UNIQUE ows ids:idlistPar {new UKConstraintTypeNode{Ids=ids}} / NOT NULL ids:idlistPar {new NotNullConstraintTypeNode{Ids=ids}}/ "FOREIGN" KEY localIds:idlistPar "REFERENCES" foreignTable:Id foreignIds:idlistPar { new FKConstraintTypeNode{LocalIds=localIds, ForeignTable=foreignTable, ForeignIds=foreignIds}}
 idlistPar <IList<string>> = "(" ids:idlist ")" {ids}
 idlist = Id<1,,comma>

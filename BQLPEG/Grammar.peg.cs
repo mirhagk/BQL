@@ -358,9 +358,9 @@ namespace
                                         r8 = this.ows(ref cursor);
                                         if (r8 != null)
                                         {
-                                            IParseResult<IList<FieldNode>> r9 = null;
+                                            IParseResult<IList<ITableDefNode>> r9 = null;
                                             var fieldsStart = cursor;
-                                            r9 = this.fieldDefList(ref cursor);
+                                            r9 = this.tableDefList(ref cursor);
                                             var fieldsEnd = cursor;
                                             var fields = ValueOrDefault(r9);
                                             if (r9 != null)
@@ -373,32 +373,11 @@ namespace
                                                     r11 = this.ParseLiteral(ref cursor, ")");
                                                     if (r11 != null)
                                                     {
-                                                        IParseResult<IList<string>> r12 = null;
-                                                        r12 = this.ows(ref cursor);
-                                                        if (r12 != null)
-                                                        {
-                                                            IParseResult<IList<ConstraintNode>> r13 = null;
-                                                            var constraintsStart = cursor;
-                                                            r13 = this.constraintListOpt(ref cursor);
-                                                            var constraintsEnd = cursor;
-                                                            var constraints = ValueOrDefault(r13);
-                                                            if (r13 != null)
-                                                            {
-                                                                r0 = this.ReturnHelper<CreateTableNode>(startCursor0, ref cursor, state =>
-                                                                    #line 11 "Grammar.peg"
-                                                                                                                                          new CreateTableNode{Name=id, Fields=fields, Constraints = constraints}
-                                                                    #line default
-                                                                    );
-                                                            }
-                                                            else
-                                                            {
-                                                                cursor = startCursor0;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            cursor = startCursor0;
-                                                        }
+                                                        r0 = this.ReturnHelper<CreateTableNode>(startCursor0, ref cursor, state =>
+                                                            #line 11 "Grammar.peg"
+                                                                                                        new CreateTableNode{Name=id, Fields=fields.Where(f=>f is FieldNode).Cast<FieldNode>(), Constraints=fields.Where(f=>f is ConstraintNode).Cast<ConstraintNode>()}
+                                                            #line default
+                                                            );
                                                     }
                                                     else
                                                     {
@@ -457,11 +436,11 @@ namespace
             return r0;
         }
 
-        private IParseResult<IList<FieldNode>> fieldDefList(ref Cursor cursor)
+        private IParseResult<IList<ITableDefNode>> tableDefList(ref Cursor cursor)
         {
-            IParseResult<IList<FieldNode>> r0 = null;
+            IParseResult<IList<ITableDefNode>> r0 = null;
             var startCursor0 = cursor;
-            var l0 = new List<FieldNode>();
+            var l0 = new List<ITableDefNode>();
             while (true)
             {
                 var startCursor1 = cursor;
@@ -507,8 +486,15 @@ namespace
                         break;
                     }
                 }
-                IParseResult<FieldNode> r5 = null;
-                r5 = this.fieldDef(ref cursor);
+                IParseResult<ITableDefNode> r5 = null;
+                if (r5 == null)
+                {
+                    r5 = this.fieldDef(ref cursor);
+                }
+                if (r5 == null)
+                {
+                    r5 = this.constraintDef(ref cursor);
+                }
                 if (r5 != null)
                 {
                     l0.Add(r5.Value);
@@ -521,7 +507,7 @@ namespace
             }
             if (l0.Count >= 1)
             {
-                r0 = this.ReturnHelper<IList<FieldNode>>(startCursor0, ref cursor, state => l0.AsReadOnly());
+                r0 = this.ReturnHelper<IList<ITableDefNode>>(startCursor0, ref cursor, state => l0.AsReadOnly());
             }
             else
             {
@@ -1043,30 +1029,8 @@ namespace
             return r0;
         }
 
-        private IParseResult<IList<ConstraintNode>> constraintListOpt(ref Cursor cursor)
-        {
-            IParseResult<IList<ConstraintNode>> r0 = null;
-            var startCursor0 = cursor;
-            var l0 = new List<ConstraintNode>();
-            while (true)
-            {
-                IParseResult<ConstraintNode> r1 = null;
-                r1 = this.constraintDef(ref cursor);
-                if (r1 != null)
-                {
-                    l0.Add(r1.Value);
-                }
-                else
-                {
-                    break;
-                }
-            }
-            r0 = this.ReturnHelper<IList<ConstraintNode>>(startCursor0, ref cursor, state => l0.AsReadOnly());
-            return r0;
-        }
-
         private IParseResult<
-            #line 19 "Grammar.peg"
+            #line 18 "Grammar.peg"
                    ConstraintTypeNode
             #line default
             > constraintTypeOpt(ref Cursor cursor)
@@ -1091,7 +1055,7 @@ namespace
                         if (r3 != null)
                         {
                             r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor0, ref cursor, state =>
-                                #line 19 "Grammar.peg"
+                                #line 18 "Grammar.peg"
                                                                     new PKConstraintTypeNode{Ids=ids}
                                 #line default
                                 );
@@ -1130,7 +1094,7 @@ namespace
                         if (r6 != null)
                         {
                             r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor1, ref cursor, state =>
-                                #line 19 "Grammar.peg"
+                                #line 18 "Grammar.peg"
                                                                                                                                   new UKConstraintTypeNode{Ids=ids}
                                 #line default
                                 );
@@ -1169,7 +1133,7 @@ namespace
                         if (r9 != null)
                         {
                             r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor2, ref cursor, state =>
-                                #line 19 "Grammar.peg"
+                                #line 18 "Grammar.peg"
                                                                                                                                                                                                new NotNullConstraintTypeNode{Ids=ids}
                                 #line default
                                 );
@@ -1226,7 +1190,7 @@ namespace
                                     if (r15 != null)
                                     {
                                         r0 = this.ReturnHelper<ConstraintTypeNode>(startCursor3, ref cursor, state =>
-                                            #line 19 "Grammar.peg"
+                                            #line 18 "Grammar.peg"
                                                                                                                                                                                                                                                                                                                              new FKConstraintTypeNode{LocalIds=localIds, ForeignTable=foreignTable, ForeignIds=foreignIds}
                                             #line default
                                             );
@@ -1265,7 +1229,7 @@ namespace
         }
 
         private IParseResult<
-            #line 20 "Grammar.peg"
+            #line 19 "Grammar.peg"
            IList<string>
             #line default
             > idlistPar(ref Cursor cursor)
@@ -1288,7 +1252,7 @@ namespace
                     if (r3 != null)
                     {
                         r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state =>
-                            #line 20 "Grammar.peg"
+                            #line 19 "Grammar.peg"
                                                 ids
                             #line default
                             );
@@ -1365,7 +1329,7 @@ namespace
         }
 
         private IParseResult<
-            #line 26 "Grammar.peg"
+            #line 25 "Grammar.peg"
            string
             #line default
             > Id_simple(ref Cursor cursor)
@@ -1375,7 +1339,7 @@ namespace
             {
                 var startCursor0 = cursor;
                 IParseResult<
-                    #line 26 "Grammar.peg"
+                    #line 25 "Grammar.peg"
                        string
                     #line default
                     > r1 = null;

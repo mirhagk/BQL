@@ -2,7 +2,8 @@ using System.Collections.Generic;
 
 namespace BQLPEG.Nodes
 {
-    public class FieldNode :Node
+    interface ITableDefNode { }
+    public class FieldNode : Node, ITableDefNode
     {
         public string Name { get; set; }
         public string Type { get; set; }

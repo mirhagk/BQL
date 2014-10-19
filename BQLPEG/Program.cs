@@ -22,7 +22,7 @@ namespace BQLPEG
                 var result = string.Compare(testSQL, sql, true) == 0;
                 if (!debug || result)
                     return result;
-                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parseResult));
+                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parseResult,Newtonsoft.Json.Formatting.Indented));
                 Console.WriteLine("Expected: " + sql);
                 Console.WriteLine("Actual: "+ testSQL);
                 return result;
