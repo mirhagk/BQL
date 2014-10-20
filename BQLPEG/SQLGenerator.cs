@@ -27,11 +27,26 @@ namespace BQLPEG
                 return "GO";
             if (createTableStatement != null)
             {
-                return string.Format("CREATE TABLE {0} ({1})", createTableStatement.Name, GenerateSQL(createTableStatement.Fields));
+                var fields = GenerateSQL(createTableStatement.Fields);
+                var constraints = GenerateSQL(createTableStatement.Constraints);
+                if (!string.IsNullOrWhiteSpace(constraints))
+                    constraints = ", "+constraints;
+                return string.Format("CREATE TABLE {0} ({1}{2})", createTableStatement.Name, GenerateSQL(createTableStatement.Fields), constraints);
             }
             throw new ArgumentException(string.Format("Did not understand statement of type ", statement.GetType()));
         }
-
+        private string GenerateSQL(IEnumerable<ConstraintNode> constraints)
+        {
+            return string.Join(", ", constraints.Select(c =>
+            {
+                var uniqueConstraint = c.ConstraintType as UKConstraintTypeNode;
+                if (uniqueConstraint != null)
+                {
+                    return string.Format("CONSTRAINT {0} UNIQUE ({1})", c.Name, string.Join(", ", uniqueConstraint.Ids));
+                }
+                throw new ArgumentException(string.Format("Did not understand constraint of type ", c.GetType()));
+            }));
+        }
         private string GenerateSQL(IEnumerable<FieldNode> fields)
         {
             return string.Join(", ", fields.Select(field =>
