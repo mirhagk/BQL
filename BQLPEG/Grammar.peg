@@ -6,8 +6,7 @@ Root = stmtList
 stmtLine <StatementNode> = stmt:stmt ";"? {stmt}
 stmtList <IEnumerable<StatementNode>> = stmtLine+
 Id <string> = id:Id_simple<1,,dot> { string.Concat(id)}
-stmt <StatementNode> = createTableStmt / ("GO" {new GoStatementNode()})
-oldCreateTableStmt <CreateTableNode> = CREATE ows TABLE ows id:Id ows{new CreateTableNode{Name=id}}
+stmt <StatementNode> = createTableStmt / ("GO" {new GoStatementNode()}) / selectStmt 
 createTableStmt <CreateTableNode> = CREATE ows TABLE ows id:Id ows "(" ows fields:tableDefList ows ")" {new CreateTableNode{Name=id, Fields=fields.Where(f=>f is FieldNode).Cast<FieldNode>(), Constraints=fields.Where(f=>f is ConstraintNode).Cast<ConstraintNode>()}}
 tableDefList = (<ITableDefNode> fieldDef / constraintDef)<1,,(ows comma ows)>
 fieldDef <FieldNode> = id:Id ows type:typeName ows typeParams:typeParams? ows nullval:nullOpt {new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=nullval}}
@@ -18,6 +17,41 @@ constraintDef <ConstraintNode> = CONSTRAINT ws id:Id ws constraintType:constrain
 constraintTypeOpt <ConstraintTypeNode> = PRIMARY KEY ids:idlistPar {new PKConstraintTypeNode{Ids=ids}}/ UNIQUE ows ids:idlistPar {new UKConstraintTypeNode{Ids=ids}} / NOT NULL ids:idlistPar {new NotNullConstraintTypeNode{Ids=ids}}/ "FOREIGN" KEY localIds:idlistPar "REFERENCES" foreignTable:Id foreignIds:idlistPar { new FKConstraintTypeNode{LocalIds=localIds, ForeignTable=foreignTable, ForeignIds=foreignIds}}
 idlistPar <IList<string>> = "(" ids:idlist ")" {ids}
 idlist = Id<1,,comma>
+selectStmt = selectClause fromClause? whereClause? groupClause? havingClause? orderClause? / fromClause whereClause? groupClause?  havingClause? orderClause? selectClause
+selectClause = SELECT ("ALL"/"DISTINCT")? selList (INTO Id)?
+selList = columnItemList / "*"
+columnItemList = columnItem<1,,comma>
+columnItem = projectionRef / columnSource (AS? Id)?
+columnSource = aggregate / Id
+aggregate = aggregateName "(" aggregateArg ")"
+aggregateArg = expression / "*"
+aggregateName = COUNT / "AVG" / "MIN" / "MAX" / "STDEV" / "STDEVP" / "SUM" / "VAR" / "VARP"
+fromClause = FROM idlist joinChain?
+joinChain = joinKind? JOIN idlist ON Id "=" Id
+joinKind = "INNER" / "LEFT" "OUTER"? / "RIGHT" "OUTER"?
+whereClause = "WHERE" expression
+groupClause = "GROUP" BY idlist
+havingClause = "HAVING" expression
+orderClause = "ORDER" BY orderList
+projectionRef = "<" Id_simple ">" / Id_simple dot "<" Id_simple ">"
+orderList = orderMember<1,,comma>
+orderMember = Id ("ASC"/"DESC")?
+exprList = expression<1,,comma>
+expression -memoize = term / unExpr / binExpr // | betweenExpr // BETWEEN doesn't work - yet; 
+term = Id / string_literal / number / funCall / tuple / parSelectStmt
+tuple = "(" exprList ")"
+parSelectStmt = "(" selectStmt ")"
+unExpr = unOp term
+unOp = NOT / "+" / "-" / "~"
+binExpr -memoize = expression binOp expression
+binOp = "+" / "-" / "*" / "/" / "%" / "&" / "|" / "^" / "=" / ">" / "<" / ">=" / "<>" / "!=" / "!<" / "!>" / "AND" / "OR" / "LIKE" / NOT "LIKE" / "IN" / NOT "IN"
+betweenExpr = expression NOT? "BETWEEN" expression "AND" expression
+// funCall covers some psedo-operators and special forms like ANY(...), SOME(...), ALL(...), EXISTS(...), IN(...)
+funCall = Id "(" funArgs ")"
+funArgs = selectStmt / exprList
+inStmt = expression "IN" "(" exprList ")"
+
+
 
 //Terminals
 dot = "."
