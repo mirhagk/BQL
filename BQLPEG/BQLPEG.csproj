@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="GrammarPartial.cs" />
     <Compile Include="Nodes\ConstraintNode.cs" />
+    <Compile Include="Nodes\ConstraintTypeNode.cs" />
     <Compile Include="Nodes\CreateTableNode.cs" />
     <Compile Include="Nodes\FieldNode.cs" />
     <Compile Include="Nodes\Node.cs" />

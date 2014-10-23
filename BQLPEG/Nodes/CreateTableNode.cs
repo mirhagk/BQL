@@ -10,6 +10,6 @@ namespace BQLPEG.Nodes
     {
         public string Name { get; set; }
         public IEnumerable<FieldNode> Fields { get; set; }
-        public IEnumerable<ConstraintNode> Constraionts { get; set; }
+        public IEnumerable<ConstraintNode> Constraints { get; set; }
     }
 }

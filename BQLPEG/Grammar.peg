@@ -1,5 +1,6 @@
 ﻿@namespace BQLPEG
 @using BQLPEG.Nodes
+@using System.Linq
 Root = stmtList
 stmtLine <StatementNode> = stmt:stmt ";"? {stmt}
 stmtList <IEnumerable<StatementNode>> = stmtLine+
@@ -7,13 +8,14 @@ Id <string> = id:Id_simple<1,,dot> { string.Concat(id)}
 stmt <StatementNode> = createTableStmt / createIndexStmt / alterStmt / dropTableStmt / dropIndexStmt / selectStmt / insertStmt / updateStmt / deleteStmt / projectionDecl / "GO"
 createTableStmt <CreateTableNode> = CREATE TABLE id:Id "(" fields:fieldDefList ")" constraints:constraintListOpt {new CreateTableNode{Name=id, Fields=fields, Constraints=constraints}}
 fieldDefList = fieldDef<1,,comma>
-fieldDef <FieldNode> = id:Id type:typeName typeParams:typeParams? null:(NULL / NOT NULL)? {new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=null}}
+fieldDef <FieldNode> = id:Id type:typeName typeParams:typeParams? nullval:nullOpt {new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=nullval}}
 typeName = "BIT" / "DATE" / "TIME" / "TIMESTAMP" / "DECIMAL" / "REAL" / "FLOAT" / "SMALLINT" / "INTEGER" / "INTERVAL" / "CHARACTER" / "DATETIME" / "INT" / "DOUBLE" / "CHAR" / "NCHAR" / "VARCHAR" / "NVARCHAR" / "IMAGE" / "TEXT" / "NTEXT"
 typeParams <IEnumerable<int>> = "(" num:number ")" { new int[]{int.Parse(num)}}/ "(" num1:number comma num2:number ")" {new int[]{int.Parse(num1),int.Parse(num2)}}
-constraintDef = CONSTRAINT Id constraintTypeOpt
+nullOpt <bool> = val:(<bool>NULL {true}/ NOT NULL{false})? {val.SingleOrDefault()} 
+constraintDef <ConstraintNode> = CONSTRAINT id:Id constraintType:constraintTypeOpt {new ConstraintNode{ Name=id, ConstraintType=constraintType}}
 constraintListOpt = constraintDef*
-constraintTypeOpt = PRIMARY KEY idlistPar / UNIQUE idlistPar / NOT NULL idlistPar / "FOREIGN" KEY idlistPar "REFERENCES" Id idlistPar
-idlistPar = "(" idlist ")"
+constraintTypeOpt <ConstraintTypeNode> = PRIMARY KEY ids:idlistPar {new PKConstraintTypeNode{Ids=ids}}/ UNIQUE idlistPar / NOT NULL idlistPar / "FOREIGN" KEY idlistPar "REFERENCES" Id idlistPar
+idlistPar <IList<string>> = "(" ids:idlist ")" {ids}
 idlist = Id<1,,comma>
 createIndexStmt = CREATE UNIQUE? INDEX Id ON Id orderList withClause?
 orderList = orderMember<1,,comma>
