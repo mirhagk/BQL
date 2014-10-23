@@ -1557,7 +1557,7 @@ namespace
                 r2 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
                 if (r2 != null)
                 {
-                    IParseResult<IList<string>> r4 = null;
+                    IParseResult<IColumnListNode> r4 = null;
                     r4 = this.selList(ref cursor);
                     if (r4 != null)
                     {
@@ -1633,52 +1633,91 @@ namespace
             return r0;
         }
 
-        private IParseResult<IList<string>> selList(ref Cursor cursor)
+        private IParseResult<
+            #line 22 "Grammar.peg"
+         IColumnListNode
+            #line default
+            > selList(ref Cursor cursor)
         {
-            IParseResult<IList<string>> r0 = null;
+            IParseResult<IColumnListNode> r0 = null;
             if (r0 == null)
             {
                 r0 = this.columnItemList(ref cursor);
             }
             if (r0 == null)
             {
-                r0 = this.ParseLiteral(ref cursor, "*");
+                var startCursor0 = cursor;
+                IParseResult<string> r1 = null;
+                r1 = this.ParseLiteral(ref cursor, "*");
+                if (r1 != null)
+                {
+                    r0 = this.ReturnHelper<IColumnListNode>(startCursor0, ref cursor, state =>
+                        #line 22 "Grammar.peg"
+                                                   new AllColumnsListNode()
+                        #line default
+                        );
+                }
+                else
+                {
+                    cursor = startCursor0;
+                }
             }
             return r0;
         }
 
-        private IParseResult<IList<string>> columnItemList(ref Cursor cursor)
+        private IParseResult<
+            #line 23 "Grammar.peg"
+                ColumnNameListNode
+            #line default
+            > columnItemList(ref Cursor cursor)
         {
-            IParseResult<IList<string>> r0 = null;
+            IParseResult<ColumnNameListNode> r0 = null;
             var startCursor0 = cursor;
+            IParseResult<IList<string>> r1 = null;
+            var idsStart = cursor;
+            var startCursor1 = cursor;
             var l0 = new List<string>();
             while (true)
             {
-                var startCursor1 = cursor;
+                var startCursor2 = cursor;
                 if (l0.Count > 0)
                 {
-                    IParseResult<string> r1 = null;
-                    r1 = this.comma(ref cursor);
-                    if (r1 == null)
+                    IParseResult<string> r2 = null;
+                    r2 = this.comma(ref cursor);
+                    if (r2 == null)
                     {
                         break;
                     }
                 }
-                IParseResult<string> r2 = null;
-                r2 = this.columnItem(ref cursor);
-                if (r2 != null)
+                IParseResult<string> r3 = null;
+                r3 = this.columnItem(ref cursor);
+                if (r3 != null)
                 {
-                    l0.Add(r2.Value);
+                    l0.Add(r3.Value);
                 }
                 else
                 {
-                    cursor = startCursor1;
+                    cursor = startCursor2;
                     break;
                 }
             }
             if (l0.Count >= 1)
             {
-                r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state => l0.AsReadOnly());
+                r1 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
+            }
+            else
+            {
+                cursor = startCursor1;
+            }
+            var idsEnd = cursor;
+            var ids = ValueOrDefault(r1);
+            if (r1 != null)
+            {
+                r0 = this.ReturnHelper<ColumnNameListNode>(startCursor0, ref cursor, state =>
+                    #line 23 "Grammar.peg"
+                                                                 new ColumnNameListNode{Ids= ids}
+                    #line default
+                    );
             }
             else
             {

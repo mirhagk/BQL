@@ -19,8 +19,8 @@ idlistPar <IList<string>> = "(" ids:idlist ")" {ids}
 idlist = Id<1,,comma>
 selectStmt = selectClause fromClause? whereClause? groupClause? havingClause? orderClause? / fromClause whereClause? groupClause?  havingClause? orderClause? selectClause
 selectClause = SELECT ("ALL"/"DISTINCT")? selList (INTO Id)?
-selList = columnItemList / "*"
-columnItemList = columnItem<1,,comma>
+selList <IColumnListNode> = columnItemList / ("*" {new AllColumnsListNode()})
+columnItemList <ColumnNameListNode> = ids:columnItem<1,,comma> { new ColumnNameListNode{Ids= ids}}
 columnItem = projectionRef / columnSource (AS? Id)?
 columnSource = aggregate / Id
 aggregate = aggregateName "(" aggregateArg ")"

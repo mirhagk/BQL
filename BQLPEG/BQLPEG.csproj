@@ -55,6 +55,7 @@
     <Compile Include="Nodes\CreateTableNode.cs" />
     <Compile Include="Nodes\FieldNode.cs" />
     <Compile Include="Nodes\Node.cs" />
+    <Compile Include="Nodes\SelectNode.cs" />
     <Compile Include="Nodes\StatementNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
