@@ -9,6 +9,11 @@ namespace BQLPEG.Nodes
     class SelectStatementNode : StatementNode, ITableExpression
     {
         public SelectClauseNode SelectClause { get; set; }
+        public FromClauseNode FromClause { get; set; }
+    }
+    class FromClauseNode :Node
+    {
+        public IEnumerable<string> TableIds { get; set; }
     }
     class SelectClauseNode : Node
     {

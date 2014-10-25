@@ -1272,105 +1272,117 @@ namespace
                 if (r1 != null)
                 {
                     IParseResult<IList<string>> r2 = null;
-                    var startCursor1 = cursor;
-                    var l0 = new List<string>();
-                    while (l0.Count < 1)
-                    {
-                        IParseResult<string> r3 = null;
-                        r3 = this.fromClause(ref cursor);
-                        if (r3 != null)
-                        {
-                            l0.Add(r3.Value);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    r2 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
+                    r2 = this.ows(ref cursor);
                     if (r2 != null)
                     {
-                        IParseResult<IList<string>> r4 = null;
-                        var startCursor2 = cursor;
-                        var l1 = new List<string>();
-                        while (l1.Count < 1)
+                        IParseResult<IList<FromClauseNode>> r3 = null;
+                        var fromStart = cursor;
+                        var startCursor1 = cursor;
+                        var l0 = new List<FromClauseNode>();
+                        while (l0.Count < 1)
                         {
-                            IParseResult<string> r5 = null;
-                            r5 = this.whereClause(ref cursor);
-                            if (r5 != null)
+                            IParseResult<FromClauseNode> r4 = null;
+                            r4 = this.fromClause(ref cursor);
+                            if (r4 != null)
                             {
-                                l1.Add(r5.Value);
+                                l0.Add(r4.Value);
                             }
                             else
                             {
                                 break;
                             }
                         }
-                        r4 = this.ReturnHelper<IList<string>>(startCursor2, ref cursor, state => l1.AsReadOnly());
-                        if (r4 != null)
+                        r3 = this.ReturnHelper<IList<FromClauseNode>>(startCursor1, ref cursor, state => l0.AsReadOnly());
+                        var fromEnd = cursor;
+                        var from = ValueOrDefault(r3);
+                        if (r3 != null)
                         {
-                            IParseResult<IList<string>> r6 = null;
-                            var startCursor3 = cursor;
-                            var l2 = new List<string>();
-                            while (l2.Count < 1)
+                            IParseResult<IList<string>> r5 = null;
+                            var startCursor2 = cursor;
+                            var l1 = new List<string>();
+                            while (l1.Count < 1)
                             {
-                                IParseResult<string> r7 = null;
-                                r7 = this.groupClause(ref cursor);
-                                if (r7 != null)
+                                IParseResult<string> r6 = null;
+                                r6 = this.whereClause(ref cursor);
+                                if (r6 != null)
                                 {
-                                    l2.Add(r7.Value);
+                                    l1.Add(r6.Value);
                                 }
                                 else
                                 {
                                     break;
                                 }
                             }
-                            r6 = this.ReturnHelper<IList<string>>(startCursor3, ref cursor, state => l2.AsReadOnly());
-                            if (r6 != null)
+                            r5 = this.ReturnHelper<IList<string>>(startCursor2, ref cursor, state => l1.AsReadOnly());
+                            if (r5 != null)
                             {
-                                IParseResult<IList<string>> r8 = null;
-                                var startCursor4 = cursor;
-                                var l3 = new List<string>();
-                                while (l3.Count < 1)
+                                IParseResult<IList<string>> r7 = null;
+                                var startCursor3 = cursor;
+                                var l2 = new List<string>();
+                                while (l2.Count < 1)
                                 {
-                                    IParseResult<string> r9 = null;
-                                    r9 = this.havingClause(ref cursor);
-                                    if (r9 != null)
+                                    IParseResult<string> r8 = null;
+                                    r8 = this.groupClause(ref cursor);
+                                    if (r8 != null)
                                     {
-                                        l3.Add(r9.Value);
+                                        l2.Add(r8.Value);
                                     }
                                     else
                                     {
                                         break;
                                     }
                                 }
-                                r8 = this.ReturnHelper<IList<string>>(startCursor4, ref cursor, state => l3.AsReadOnly());
-                                if (r8 != null)
+                                r7 = this.ReturnHelper<IList<string>>(startCursor3, ref cursor, state => l2.AsReadOnly());
+                                if (r7 != null)
                                 {
-                                    IParseResult<IList<string>> r10 = null;
-                                    var startCursor5 = cursor;
-                                    var l4 = new List<string>();
-                                    while (l4.Count < 1)
+                                    IParseResult<IList<string>> r9 = null;
+                                    var startCursor4 = cursor;
+                                    var l3 = new List<string>();
+                                    while (l3.Count < 1)
                                     {
-                                        IParseResult<string> r11 = null;
-                                        r11 = this.orderClause(ref cursor);
-                                        if (r11 != null)
+                                        IParseResult<string> r10 = null;
+                                        r10 = this.havingClause(ref cursor);
+                                        if (r10 != null)
                                         {
-                                            l4.Add(r11.Value);
+                                            l3.Add(r10.Value);
                                         }
                                         else
                                         {
                                             break;
                                         }
                                     }
-                                    r10 = this.ReturnHelper<IList<string>>(startCursor5, ref cursor, state => l4.AsReadOnly());
-                                    if (r10 != null)
+                                    r9 = this.ReturnHelper<IList<string>>(startCursor4, ref cursor, state => l3.AsReadOnly());
+                                    if (r9 != null)
                                     {
-                                        r0 = this.ReturnHelper<SelectStatementNode>(startCursor0, ref cursor, state =>
-                                            #line 21 "Grammar.peg"
-  new SelectStatementNode{SelectClause=select}
-                                            #line default
-                                            );
+                                        IParseResult<IList<string>> r11 = null;
+                                        var startCursor5 = cursor;
+                                        var l4 = new List<string>();
+                                        while (l4.Count < 1)
+                                        {
+                                            IParseResult<string> r12 = null;
+                                            r12 = this.orderClause(ref cursor);
+                                            if (r12 != null)
+                                            {
+                                                l4.Add(r12.Value);
+                                            }
+                                            else
+                                            {
+                                                break;
+                                            }
+                                        }
+                                        r11 = this.ReturnHelper<IList<string>>(startCursor5, ref cursor, state => l4.AsReadOnly());
+                                        if (r11 != null)
+                                        {
+                                            r0 = this.ReturnHelper<SelectStatementNode>(startCursor0, ref cursor, state =>
+                                                #line 21 "Grammar.peg"
+  new SelectStatementNode{SelectClause=select, FromClause=from.SingleOrDefault()}
+                                                #line default
+                                                );
+                                        }
+                                        else
+                                        {
+                                            cursor = startCursor0;
+                                        }
                                     }
                                     else
                                     {
@@ -1405,96 +1417,99 @@ namespace
             if (r0 == null)
             {
                 var startCursor6 = cursor;
-                IParseResult<string> r12 = null;
-                r12 = this.fromClause(ref cursor);
-                if (r12 != null)
+                IParseResult<FromClauseNode> r13 = null;
+                var fromStart = cursor;
+                r13 = this.fromClause(ref cursor);
+                var fromEnd = cursor;
+                var from = ValueOrDefault(r13);
+                if (r13 != null)
                 {
-                    IParseResult<IList<string>> r13 = null;
+                    IParseResult<IList<string>> r14 = null;
                     var startCursor7 = cursor;
                     var l5 = new List<string>();
                     while (l5.Count < 1)
                     {
-                        IParseResult<string> r14 = null;
-                        r14 = this.whereClause(ref cursor);
-                        if (r14 != null)
+                        IParseResult<string> r15 = null;
+                        r15 = this.whereClause(ref cursor);
+                        if (r15 != null)
                         {
-                            l5.Add(r14.Value);
+                            l5.Add(r15.Value);
                         }
                         else
                         {
                             break;
                         }
                     }
-                    r13 = this.ReturnHelper<IList<string>>(startCursor7, ref cursor, state => l5.AsReadOnly());
-                    if (r13 != null)
+                    r14 = this.ReturnHelper<IList<string>>(startCursor7, ref cursor, state => l5.AsReadOnly());
+                    if (r14 != null)
                     {
-                        IParseResult<IList<string>> r15 = null;
+                        IParseResult<IList<string>> r16 = null;
                         var startCursor8 = cursor;
                         var l6 = new List<string>();
                         while (l6.Count < 1)
                         {
-                            IParseResult<string> r16 = null;
-                            r16 = this.groupClause(ref cursor);
-                            if (r16 != null)
+                            IParseResult<string> r17 = null;
+                            r17 = this.groupClause(ref cursor);
+                            if (r17 != null)
                             {
-                                l6.Add(r16.Value);
+                                l6.Add(r17.Value);
                             }
                             else
                             {
                                 break;
                             }
                         }
-                        r15 = this.ReturnHelper<IList<string>>(startCursor8, ref cursor, state => l6.AsReadOnly());
-                        if (r15 != null)
+                        r16 = this.ReturnHelper<IList<string>>(startCursor8, ref cursor, state => l6.AsReadOnly());
+                        if (r16 != null)
                         {
-                            IParseResult<IList<string>> r17 = null;
+                            IParseResult<IList<string>> r18 = null;
                             var startCursor9 = cursor;
                             var l7 = new List<string>();
                             while (l7.Count < 1)
                             {
-                                IParseResult<string> r18 = null;
-                                r18 = this.havingClause(ref cursor);
-                                if (r18 != null)
+                                IParseResult<string> r19 = null;
+                                r19 = this.havingClause(ref cursor);
+                                if (r19 != null)
                                 {
-                                    l7.Add(r18.Value);
+                                    l7.Add(r19.Value);
                                 }
                                 else
                                 {
                                     break;
                                 }
                             }
-                            r17 = this.ReturnHelper<IList<string>>(startCursor9, ref cursor, state => l7.AsReadOnly());
-                            if (r17 != null)
+                            r18 = this.ReturnHelper<IList<string>>(startCursor9, ref cursor, state => l7.AsReadOnly());
+                            if (r18 != null)
                             {
-                                IParseResult<IList<string>> r19 = null;
+                                IParseResult<IList<string>> r20 = null;
                                 var startCursor10 = cursor;
                                 var l8 = new List<string>();
                                 while (l8.Count < 1)
                                 {
-                                    IParseResult<string> r20 = null;
-                                    r20 = this.orderClause(ref cursor);
-                                    if (r20 != null)
+                                    IParseResult<string> r21 = null;
+                                    r21 = this.orderClause(ref cursor);
+                                    if (r21 != null)
                                     {
-                                        l8.Add(r20.Value);
+                                        l8.Add(r21.Value);
                                     }
                                     else
                                     {
                                         break;
                                     }
                                 }
-                                r19 = this.ReturnHelper<IList<string>>(startCursor10, ref cursor, state => l8.AsReadOnly());
-                                if (r19 != null)
+                                r20 = this.ReturnHelper<IList<string>>(startCursor10, ref cursor, state => l8.AsReadOnly());
+                                if (r20 != null)
                                 {
-                                    IParseResult<SelectClauseNode> r21 = null;
+                                    IParseResult<SelectClauseNode> r22 = null;
                                     var selectStart = cursor;
-                                    r21 = this.selectClause(ref cursor);
+                                    r22 = this.selectClause(ref cursor);
                                     var selectEnd = cursor;
-                                    var select = ValueOrDefault(r21);
-                                    if (r21 != null)
+                                    var select = ValueOrDefault(r22);
+                                    if (r22 != null)
                                     {
                                         r0 = this.ReturnHelper<SelectStatementNode>(startCursor6, ref cursor, state =>
                                             #line 23 "Grammar.peg"
-  new SelectStatementNode{SelectClause=select}
+  new SelectStatementNode{SelectClause=select, FromClause=from}
                                             #line default
                                             );
                                     }
@@ -2084,42 +2099,66 @@ namespace
             return r0;
         }
 
-        private IParseResult<string> fromClause(ref Cursor cursor)
+        private IParseResult<
+            #line 33 "Grammar.peg"
+            FromClauseNode
+            #line default
+            > fromClause(ref Cursor cursor)
         {
-            IParseResult<string> r0 = null;
+            IParseResult<FromClauseNode> r0 = null;
             var startCursor0 = cursor;
             IParseResult<string> r1 = null;
             r1 = this.FROM(ref cursor);
             if (r1 != null)
             {
                 IParseResult<IList<string>> r2 = null;
-                r2 = this.idlist(ref cursor);
+                r2 = this.ows(ref cursor);
                 if (r2 != null)
                 {
                     IParseResult<IList<string>> r3 = null;
-                    var startCursor1 = cursor;
-                    var l0 = new List<string>();
-                    while (l0.Count < 1)
+                    var idsStart = cursor;
+                    r3 = this.idlist(ref cursor);
+                    var idsEnd = cursor;
+                    var ids = ValueOrDefault(r3);
+                    if (r3 != null)
                     {
-                        IParseResult<string> r4 = null;
-                        r4 = this.joinChain(ref cursor);
+                        IParseResult<IList<string>> r4 = null;
+                        r4 = this.ows(ref cursor);
                         if (r4 != null)
                         {
-                            l0.Add(r4.Value);
+                            IParseResult<IList<string>> r5 = null;
+                            var startCursor1 = cursor;
+                            var l0 = new List<string>();
+                            while (l0.Count < 1)
+                            {
+                                IParseResult<string> r6 = null;
+                                r6 = this.joinChain(ref cursor);
+                                if (r6 != null)
+                                {
+                                    l0.Add(r6.Value);
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            r5 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
+                            if (r5 != null)
+                            {
+                                r0 = this.ReturnHelper<FromClauseNode>(startCursor0, ref cursor, state =>
+                                    #line 33 "Grammar.peg"
+                                                                  new FromClauseNode{TableIds=ids}
+                                    #line default
+                                    );
+                            }
+                            else
+                            {
+                                cursor = startCursor0;
+                            }
                         }
                         else
                         {
-                            break;
-                        }
-                    }
-                    r3 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                    if (r3 != null)
-                    {
-                        {
-                            var len = cursor.Location - startCursor0.Location;
-                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                state.Subject.Substring(startCursor0.Location, len)
-                                );
+                            cursor = startCursor0;
                         }
                     }
                     else
