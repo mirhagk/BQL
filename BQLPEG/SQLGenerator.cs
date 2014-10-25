@@ -23,6 +23,7 @@ namespace BQLPEG
         {
             var goStatement = statement as GoStatementNode;
             var createTableStatement = statement as CreateTableNode;
+            var selectStatement = statement as SelectStatementNode;
             if (goStatement != null)
                 return "GO";
             if (createTableStatement != null)
@@ -33,7 +34,26 @@ namespace BQLPEG
                     constraints = ", "+constraints;
                 return string.Format("CREATE TABLE {0} ({1}{2})", createTableStatement.Name, GenerateSQL(createTableStatement.Fields), constraints);
             }
+            if (selectStatement != null)
+            {
+                return String.Format("{0} {1}", GenerateSQL(selectStatement.SelectClause), GenerateSQL(selectStatement.FromClause));
+            }
             throw new ArgumentException(string.Format("Did not understand statement of type {0}", statement.GetType().Name));
+        }
+        private string GenerateSQL(SelectClauseNode selectClauseNode)
+        {
+            string columns = "";
+            if (selectClauseNode.ColumnList is AllColumnsListNode)
+                columns = "*";
+            else
+            {
+                columns = string.Join(", ", (selectClauseNode.ColumnList as ColumnNameListNode).Ids);
+            }
+            return string.Format("SELECT {0} {1}", selectClauseNode.Distinct ? "DISTINCT" : "ALL", columns);
+        }
+        private string GenerateSQL(FromClauseNode fromClauseNode)
+        {
+            return string.Format("FROM {0}", string.Join(", ", fromClauseNode.TableIds));
         }
         private string GenerateSQL(IEnumerable<ConstraintNode> constraints)
         {
