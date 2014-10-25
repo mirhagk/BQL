@@ -33,7 +33,7 @@ namespace BQLPEG
                     constraints = ", "+constraints;
                 return string.Format("CREATE TABLE {0} ({1}{2})", createTableStatement.Name, GenerateSQL(createTableStatement.Fields), constraints);
             }
-            throw new ArgumentException(string.Format("Did not understand statement of type ", statement.GetType()));
+            throw new ArgumentException(string.Format("Did not understand statement of type {0}", statement.GetType().Name));
         }
         private string GenerateSQL(IEnumerable<ConstraintNode> constraints)
         {
@@ -44,7 +44,7 @@ namespace BQLPEG
                 {
                     return string.Format("CONSTRAINT {0} UNIQUE ({1})", c.Name, string.Join(", ", uniqueConstraint.Ids));
                 }
-                throw new ArgumentException(string.Format("Did not understand constraint of type ", c.GetType()));
+                throw new ArgumentException(string.Format("Did not understand constraint of type {0}", c.GetType()));
             }));
         }
         private string GenerateSQL(IEnumerable<FieldNode> fields)

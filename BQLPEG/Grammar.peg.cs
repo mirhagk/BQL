@@ -1537,73 +1537,109 @@ namespace
             r1 = this.SELECT(ref cursor);
             if (r1 != null)
             {
-                IParseResult<bool> r2 = null;
-                var distinctStart = cursor;
-                r2 = this.distinctOpt(ref cursor);
-                var distinctEnd = cursor;
-                var distinct = ValueOrDefault(r2);
+                IParseResult<IList<string>> r2 = null;
+                r2 = this.ows(ref cursor);
                 if (r2 != null)
                 {
-                    IParseResult<IColumnListNode> r3 = null;
-                    var columnsStart = cursor;
-                    r3 = this.selList(ref cursor);
-                    var columnsEnd = cursor;
-                    var columns = ValueOrDefault(r3);
+                    IParseResult<bool> r3 = null;
+                    var distinctStart = cursor;
+                    r3 = this.distinctOpt(ref cursor);
+                    var distinctEnd = cursor;
+                    var distinct = ValueOrDefault(r3);
                     if (r3 != null)
                     {
                         IParseResult<IList<string>> r4 = null;
-                        var idStart = cursor;
-                        var startCursor1 = cursor;
-                        var l0 = new List<string>();
-                        while (l0.Count < 1)
+                        r4 = this.ows(ref cursor);
+                        if (r4 != null)
                         {
-                            IParseResult<string> r5 = null;
-                            var startCursor2 = cursor;
-                            IParseResult<string> r6 = null;
-                            r6 = this.INTO(ref cursor);
-                            if (r6 != null)
+                            IParseResult<IColumnListNode> r5 = null;
+                            var columnsStart = cursor;
+                            r5 = this.selList(ref cursor);
+                            var columnsEnd = cursor;
+                            var columns = ValueOrDefault(r5);
+                            if (r5 != null)
                             {
-                                IParseResult<string> r7 = null;
-                                var tableIdStart = cursor;
-                                r7 = this.Id(ref cursor);
-                                var tableIdEnd = cursor;
-                                var tableId = ValueOrDefault(r7);
-                                if (r7 != null)
+                                IParseResult<IList<string>> r6 = null;
+                                r6 = this.ows(ref cursor);
+                                if (r6 != null)
                                 {
-                                    r5 = this.ReturnHelper<string>(startCursor2, ref cursor, state =>
-                                        #line 21 "Grammar.peg"
-                                                                                                  tableId
-                                        #line default
-                                        );
+                                    IParseResult<IList<string>> r7 = null;
+                                    var idStart = cursor;
+                                    var startCursor1 = cursor;
+                                    var l0 = new List<string>();
+                                    while (l0.Count < 1)
+                                    {
+                                        IParseResult<string> r8 = null;
+                                        var startCursor2 = cursor;
+                                        IParseResult<string> r9 = null;
+                                        r9 = this.INTO(ref cursor);
+                                        if (r9 != null)
+                                        {
+                                            IParseResult<IList<string>> r10 = null;
+                                            r10 = this.ows(ref cursor);
+                                            if (r10 != null)
+                                            {
+                                                IParseResult<string> r11 = null;
+                                                var tableIdStart = cursor;
+                                                r11 = this.Id(ref cursor);
+                                                var tableIdEnd = cursor;
+                                                var tableId = ValueOrDefault(r11);
+                                                if (r11 != null)
+                                                {
+                                                    r8 = this.ReturnHelper<string>(startCursor2, ref cursor, state =>
+                                                        #line 21 "Grammar.peg"
+                                                                                                                  tableId
+                                                        #line default
+                                                        );
+                                                }
+                                                else
+                                                {
+                                                    cursor = startCursor2;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                cursor = startCursor2;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            cursor = startCursor2;
+                                        }
+                                        if (r8 != null)
+                                        {
+                                            l0.Add(r8.Value);
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    r7 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
+                                    var idEnd = cursor;
+                                    var id = ValueOrDefault(r7);
+                                    if (r7 != null)
+                                    {
+                                        r0 = this.ReturnHelper<SelectClauseNode>(startCursor0, ref cursor, state =>
+                                            #line 21 "Grammar.peg"
+                                                                                                                              new SelectClauseNode{Distinct=distinct, ColumnList=columns, IntoTableId=id.SingleOrDefault()}
+                                            #line default
+                                            );
+                                    }
+                                    else
+                                    {
+                                        cursor = startCursor0;
+                                    }
                                 }
                                 else
                                 {
-                                    cursor = startCursor2;
+                                    cursor = startCursor0;
                                 }
                             }
                             else
                             {
-                                cursor = startCursor2;
+                                cursor = startCursor0;
                             }
-                            if (r5 != null)
-                            {
-                                l0.Add(r5.Value);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        r4 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
-                        var idEnd = cursor;
-                        var id = ValueOrDefault(r4);
-                        if (r4 != null)
-                        {
-                            r0 = this.ReturnHelper<SelectClauseNode>(startCursor0, ref cursor, state =>
-                                #line 21 "Grammar.peg"
-                                                                                                              new SelectClauseNode{Distinct=distinct, ColumnList=columns, IntoTableId=id.SingleOrDefault()}
-                                #line default
-                                );
                         }
                         else
                         {

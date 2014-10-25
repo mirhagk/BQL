@@ -35,8 +35,12 @@ namespace BQLPEG
                 }
                 return false;
             }
-            catch
+            catch (Exception ex)
             {
+                if (debug)
+                {
+                    Console.WriteLine(ex.Message);
+                }
                 return false;
             }
         }

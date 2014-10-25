@@ -18,7 +18,7 @@ constraintTypeOpt <ConstraintTypeNode> = PRIMARY KEY ids:idlistPar {new PKConstr
 idlistPar <IList<string>> = "(" ids:idlist ")" {ids}
 idlist = Id<1,,comma>
 selectStmt <SelectStatementNode> = selectClause fromClause? whereClause? groupClause? havingClause? orderClause? {new SelectStatementNode()}/ fromClause whereClause? groupClause?  havingClause? orderClause? selectClause {new SelectStatementNode()}
-selectClause <SelectClauseNode> = SELECT distinct:distinctOpt columns:selList id:(INTO tableId:Id{tableId})? {new SelectClauseNode{Distinct=distinct, ColumnList=columns, IntoTableId=id.SingleOrDefault()}}
+selectClause <SelectClauseNode> = SELECT ows distinct:distinctOpt ows columns:selList ows id:(INTO ows tableId:Id{tableId})? {new SelectClauseNode{Distinct=distinct, ColumnList=columns, IntoTableId=id.SingleOrDefault()}}
 distinctOpt <bool> = distinct:(<bool>"ALL"{false}/"DISTINCT"{true})? {distinct.Any()?distinct.Single():false}
 selList <IColumnListNode> = columnItemList / ("*" {new AllColumnsListNode()})
 columnItemList <ColumnNameListNode> = ids:columnItem<1,,comma> { new ColumnNameListNode{Ids= ids}}
