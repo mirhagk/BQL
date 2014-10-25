@@ -17,7 +17,7 @@ constraintDef <ConstraintNode> = CONSTRAINT ws id:Id ws constraintType:constrain
 constraintTypeOpt <ConstraintTypeNode> = PRIMARY KEY ids:idlistPar {new PKConstraintTypeNode{Ids=ids}}/ UNIQUE ows ids:idlistPar {new UKConstraintTypeNode{Ids=ids}} / NOT NULL ids:idlistPar {new NotNullConstraintTypeNode{Ids=ids}}/ "FOREIGN" KEY localIds:idlistPar "REFERENCES" foreignTable:Id foreignIds:idlistPar { new FKConstraintTypeNode{LocalIds=localIds, ForeignTable=foreignTable, ForeignIds=foreignIds}}
 idlistPar <IList<string>> = "(" ids:idlist ")" {ids}
 idlist = Id<1,,comma>
-selectStmt = selectClause fromClause? whereClause? groupClause? havingClause? orderClause? / fromClause whereClause? groupClause?  havingClause? orderClause? selectClause
+selectStmt <SelectStatementNode> = selectClause fromClause? whereClause? groupClause? havingClause? orderClause? {new SelectStatementNode()}/ fromClause whereClause? groupClause?  havingClause? orderClause? selectClause {new SelectStatementNode()}
 selectClause = SELECT ("ALL"/"DISTINCT")? selList (INTO Id)?
 selList <IColumnListNode> = columnItemList / ("*" {new AllColumnsListNode()})
 columnItemList <ColumnNameListNode> = ids:columnItem<1,,comma> { new ColumnNameListNode{Ids= ids}}
@@ -36,7 +36,7 @@ orderClause = "ORDER" BY orderList
 projectionRef = "<" Id_simple ">" / Id_simple dot "<" Id_simple ">"
 orderList = orderMember<1,,comma>
 orderMember = Id ("ASC"/"DESC")?
-exprList = expression<1,,comma>
+exprList <ITableExpression> = expression<1,,comma> {new ExpressionList()}
 expression -memoize = term / unExpr / binExpr // | betweenExpr // BETWEEN doesn't work - yet; 
 term = Id / string_literal / number / funCall / tuple / parSelectStmt
 tuple = "(" exprList ")"
@@ -48,7 +48,7 @@ binOp = "+" / "-" / "*" / "/" / "%" / "&" / "|" / "^" / "=" / ">" / "<" / ">=" /
 betweenExpr = expression NOT? "BETWEEN" expression "AND" expression
 // funCall covers some psedo-operators and special forms like ANY(...), SOME(...), ALL(...), EXISTS(...), IN(...)
 funCall = Id "(" funArgs ")"
-funArgs = selectStmt / exprList
+funArgs <IExpression> = selectStmt / exprList
 inStmt = expression "IN" "(" exprList ")"
 
 

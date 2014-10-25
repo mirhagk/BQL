@@ -1254,9 +1254,13 @@ namespace
             return r0;
         }
 
-        private IParseResult<string> selectStmt(ref Cursor cursor)
+        private IParseResult<
+            #line 20 "Grammar.peg"
+            SelectStatementNode
+            #line default
+            > selectStmt(ref Cursor cursor)
         {
-            IParseResult<string> r0 = null;
+            IParseResult<SelectStatementNode> r0 = null;
             if (r0 == null)
             {
                 var startCursor0 = cursor;
@@ -1359,12 +1363,11 @@ namespace
                                     r10 = this.ReturnHelper<IList<string>>(startCursor5, ref cursor, state => l4.AsReadOnly());
                                     if (r10 != null)
                                     {
-                                        {
-                                            var len = cursor.Location - startCursor0.Location;
-                                            r0 = this.ReturnHelper<string>(startCursor0, ref cursor, state =>
-                                                state.Subject.Substring(startCursor0.Location, len)
-                                                );
-                                        }
+                                        r0 = this.ReturnHelper<SelectStatementNode>(startCursor0, ref cursor, state =>
+                                            #line 20 "Grammar.peg"
+                                                                                                                  new SelectStatementNode()
+                                            #line default
+                                            );
                                     }
                                     else
                                     {
@@ -1483,12 +1486,11 @@ namespace
                                     r21 = this.selectClause(ref cursor);
                                     if (r21 != null)
                                     {
-                                        {
-                                            var len = cursor.Location - startCursor6.Location;
-                                            r0 = this.ReturnHelper<string>(startCursor6, ref cursor, state =>
-                                                state.Subject.Substring(startCursor6.Location, len)
-                                                );
-                                        }
+                                        r0 = this.ReturnHelper<SelectStatementNode>(startCursor6, ref cursor, state =>
+                                            #line 20 "Grammar.peg"
+                                                                                                                                                                                                                             new SelectStatementNode()
+                                            #line default
+                                            );
                                     }
                                     else
                                     {
@@ -2512,38 +2514,56 @@ namespace
             return r0;
         }
 
-        private IParseResult<IList<string>> exprList(ref Cursor cursor)
+        private IParseResult<
+            #line 39 "Grammar.peg"
+          ITableExpression
+            #line default
+            > exprList(ref Cursor cursor)
         {
-            IParseResult<IList<string>> r0 = null;
+            IParseResult<ITableExpression> r0 = null;
             var startCursor0 = cursor;
+            IParseResult<IList<string>> r1 = null;
+            var startCursor1 = cursor;
             var l0 = new List<string>();
             while (true)
             {
-                var startCursor1 = cursor;
+                var startCursor2 = cursor;
                 if (l0.Count > 0)
                 {
-                    IParseResult<string> r1 = null;
-                    r1 = this.comma(ref cursor);
-                    if (r1 == null)
+                    IParseResult<string> r2 = null;
+                    r2 = this.comma(ref cursor);
+                    if (r2 == null)
                     {
                         break;
                     }
                 }
-                IParseResult<string> r2 = null;
-                r2 = this.expression(ref cursor);
-                if (r2 != null)
+                IParseResult<string> r3 = null;
+                r3 = this.expression(ref cursor);
+                if (r3 != null)
                 {
-                    l0.Add(r2.Value);
+                    l0.Add(r3.Value);
                 }
                 else
                 {
-                    cursor = startCursor1;
+                    cursor = startCursor2;
                     break;
                 }
             }
             if (l0.Count >= 1)
             {
-                r0 = this.ReturnHelper<IList<string>>(startCursor0, ref cursor, state => l0.AsReadOnly());
+                r1 = this.ReturnHelper<IList<string>>(startCursor1, ref cursor, state => l0.AsReadOnly());
+            }
+            else
+            {
+                cursor = startCursor1;
+            }
+            if (r1 != null)
+            {
+                r0 = this.ReturnHelper<ITableExpression>(startCursor0, ref cursor, state =>
+                    #line 39 "Grammar.peg"
+                                                    new ExpressionList()
+                    #line default
+                    );
             }
             else
             {
@@ -2634,7 +2654,7 @@ namespace
             r1 = this.ParseLiteral(ref cursor, "(");
             if (r1 != null)
             {
-                IParseResult<IList<string>> r2 = null;
+                IParseResult<ITableExpression> r2 = null;
                 r2 = this.exprList(ref cursor);
                 if (r2 != null)
                 {
@@ -2674,7 +2694,7 @@ namespace
             r1 = this.ParseLiteral(ref cursor, "(");
             if (r1 != null)
             {
-                IParseResult<string> r2 = null;
+                IParseResult<SelectStatementNode> r2 = null;
                 r2 = this.selectStmt(ref cursor);
                 if (r2 != null)
                 {
@@ -3061,7 +3081,7 @@ namespace
                 r2 = this.ParseLiteral(ref cursor, "(");
                 if (r2 != null)
                 {
-                    IParseResult<string> r3 = null;
+                    IParseResult<IExpression> r3 = null;
                     r3 = this.funArgs(ref cursor);
                     if (r3 != null)
                     {
@@ -3098,9 +3118,13 @@ namespace
             return r0;
         }
 
-        private IParseResult<string> funArgs(ref Cursor cursor)
+        private IParseResult<
+            #line 51 "Grammar.peg"
+         IExpression
+            #line default
+            > funArgs(ref Cursor cursor)
         {
-            IParseResult<string> r0 = null;
+            IParseResult<IExpression> r0 = null;
             if (r0 == null)
             {
                 r0 = this.selectStmt(ref cursor);
@@ -3128,7 +3152,7 @@ namespace
                     r3 = this.ParseLiteral(ref cursor, "(");
                     if (r3 != null)
                     {
-                        IParseResult<IList<string>> r4 = null;
+                        IParseResult<ITableExpression> r4 = null;
                         r4 = this.exprList(ref cursor);
                         if (r4 != null)
                         {

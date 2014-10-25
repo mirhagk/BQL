@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BQLPEG.Nodes
 {
-    class SelectNode:Node
+    class SelectStatementNode : StatementNode, ITableExpression
     {
     }
     interface IColumnListNode{

@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Nodes\Expression.cs" />
     <Compile Include="Nodes\GoStatementNode.cs" />
     <Compile Include="GrammarPartial.cs" />
     <Compile Include="Nodes\ConstraintNode.cs" />
