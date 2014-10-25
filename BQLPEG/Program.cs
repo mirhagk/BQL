@@ -15,17 +15,10 @@ namespace BQLPEG
             var sql = File.ReadAllText(Path.ChangeExtension(test, ".sql"));
             var parser = new Grammar();
             var generator = new SQLGenerator();
+            IEnumerable<Nodes.StatementNode> parseResult = null;
             try
             {
-                var parseResult = parser.Parse(bql);
-                var testSQL = generator.GenerateSQL(parseResult);
-                var result = string.Compare(testSQL, sql, StringComparison.OrdinalIgnoreCase) == 0;
-                if (!debug || result)
-                    return result;
-                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parseResult,Newtonsoft.Json.Formatting.Indented));
-                Console.WriteLine("Expected:\n" + sql);
-                Console.WriteLine("Actual:\n"+ testSQL);
-                return result;
+                parseResult = parser.Parse(bql);
             }
             catch (FormatException ex)
             {
@@ -35,11 +28,23 @@ namespace BQLPEG
                 }
                 return false;
             }
+            try
+            {
+                var testSQL = generator.GenerateSQL(parseResult);
+                var result = string.Compare(testSQL, sql, StringComparison.OrdinalIgnoreCase) == 0;
+                if (!debug || result)
+                    return result;
+                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parseResult,Newtonsoft.Json.Formatting.Indented));
+                Console.WriteLine("Expected:\n" + sql);
+                Console.WriteLine("Actual:\n"+ testSQL);
+                return result;
+            }
             catch (Exception ex)
             {
                 if (debug)
                 {
                     Console.WriteLine(ex.Message);
+                    Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parseResult, Newtonsoft.Json.Formatting.Indented));
                 }
                 return false;
             }
