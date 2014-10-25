@@ -9,6 +9,12 @@ namespace BQLPEG.Nodes
     class SelectStatementNode : StatementNode, ITableExpression
     {
     }
+    class SelectClauseNode : Node
+    {
+        public bool Distinct { get; set; }
+        public string IntoTableId { get; set; }
+        public IColumnListNode ColumnList { get; set; }
+    }
     interface IColumnListNode{
 
     }
