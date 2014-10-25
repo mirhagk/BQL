@@ -8,6 +8,7 @@ namespace BQLPEG.Nodes
 {
     class SelectStatementNode : StatementNode, ITableExpression
     {
+        public SelectClauseNode SelectClause { get; set; }
     }
     class SelectClauseNode : Node
     {
