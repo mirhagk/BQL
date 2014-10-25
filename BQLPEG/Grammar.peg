@@ -17,11 +17,14 @@ constraintDef <ConstraintNode> = CONSTRAINT ws id:Id ws constraintType:constrain
 constraintTypeOpt <ConstraintTypeNode> = PRIMARY KEY ids:idlistPar {new PKConstraintTypeNode{Ids=ids}}/ UNIQUE ows ids:idlistPar {new UKConstraintTypeNode{Ids=ids}} / NOT NULL ids:idlistPar {new NotNullConstraintTypeNode{Ids=ids}}/ "FOREIGN" KEY localIds:idlistPar "REFERENCES" foreignTable:Id foreignIds:idlistPar { new FKConstraintTypeNode{LocalIds=localIds, ForeignTable=foreignTable, ForeignIds=foreignIds}}
 idlistPar <IList<string>> = "(" ids:idlist ")" {ids}
 idlist = Id<1,,comma>
-selectStmt <SelectStatementNode> = selectClause fromClause? whereClause? groupClause? havingClause? orderClause? {new SelectStatementNode()}/ fromClause whereClause? groupClause?  havingClause? orderClause? selectClause {new SelectStatementNode()}
+selectStmt <SelectStatementNode> = select:selectClause fromClause? whereClause? groupClause? havingClause? orderClause? 
+	{new SelectStatementNode{SelectClause=select}}
+	/ fromClause whereClause? groupClause?  havingClause? orderClause? select:selectClause 
+	{new SelectStatementNode{SelectClause=select}}
 selectClause <SelectClauseNode> = SELECT ows distinct:distinctOpt ows columns:selList ows id:(INTO ows tableId:Id{tableId})? {new SelectClauseNode{Distinct=distinct, ColumnList=columns, IntoTableId=id.SingleOrDefault()}}
 distinctOpt <bool> = distinct:(<bool>"ALL"{false}/"DISTINCT"{true})? {distinct.Any()?distinct.Single():false}
 selList <IColumnListNode> = columnItemList / ("*" {new AllColumnsListNode()})
-columnItemList <ColumnNameListNode> = ids:columnItem<1,,comma> { new ColumnNameListNode{Ids= ids}}
+columnItemList <ColumnNameListNode> = ids:columnItem<1,,ows comma ows> { new ColumnNameListNode{Ids= ids}}
 columnItem = projectionRef / columnSource (AS? Id)?
 columnSource = aggregate / Id
 aggregate = aggregateName "(" aggregateArg ")"

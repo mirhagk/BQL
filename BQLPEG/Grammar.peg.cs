@@ -1265,7 +1265,10 @@ namespace
             {
                 var startCursor0 = cursor;
                 IParseResult<SelectClauseNode> r1 = null;
+                var selectStart = cursor;
                 r1 = this.selectClause(ref cursor);
+                var selectEnd = cursor;
+                var select = ValueOrDefault(r1);
                 if (r1 != null)
                 {
                     IParseResult<IList<string>> r2 = null;
@@ -1364,8 +1367,8 @@ namespace
                                     if (r10 != null)
                                     {
                                         r0 = this.ReturnHelper<SelectStatementNode>(startCursor0, ref cursor, state =>
-                                            #line 20 "Grammar.peg"
-                                                                                                                  new SelectStatementNode()
+                                            #line 21 "Grammar.peg"
+  new SelectStatementNode{SelectClause=select}
                                             #line default
                                             );
                                     }
@@ -1483,12 +1486,15 @@ namespace
                                 if (r19 != null)
                                 {
                                     IParseResult<SelectClauseNode> r21 = null;
+                                    var selectStart = cursor;
                                     r21 = this.selectClause(ref cursor);
+                                    var selectEnd = cursor;
+                                    var select = ValueOrDefault(r21);
                                     if (r21 != null)
                                     {
                                         r0 = this.ReturnHelper<SelectStatementNode>(startCursor6, ref cursor, state =>
-                                            #line 20 "Grammar.peg"
-                                                                                                                                                                                                                             new SelectStatementNode()
+                                            #line 23 "Grammar.peg"
+  new SelectStatementNode{SelectClause=select}
                                             #line default
                                             );
                                     }
@@ -1526,7 +1532,7 @@ namespace
         }
 
         private IParseResult<
-            #line 21 "Grammar.peg"
+            #line 24 "Grammar.peg"
               SelectClauseNode
             #line default
             > selectClause(ref Cursor cursor)
@@ -1587,7 +1593,7 @@ namespace
                                                 if (r11 != null)
                                                 {
                                                     r8 = this.ReturnHelper<string>(startCursor2, ref cursor, state =>
-                                                        #line 21 "Grammar.peg"
+                                                        #line 24 "Grammar.peg"
                                                                                                                   tableId
                                                         #line default
                                                         );
@@ -1621,7 +1627,7 @@ namespace
                                     if (r7 != null)
                                     {
                                         r0 = this.ReturnHelper<SelectClauseNode>(startCursor0, ref cursor, state =>
-                                            #line 21 "Grammar.peg"
+                                            #line 24 "Grammar.peg"
                                                                                                                               new SelectClauseNode{Distinct=distinct, ColumnList=columns, IntoTableId=id.SingleOrDefault()}
                                             #line default
                                             );
@@ -1664,7 +1670,7 @@ namespace
         }
 
         private IParseResult<
-            #line 22 "Grammar.peg"
+            #line 25 "Grammar.peg"
              bool
             #line default
             > distinctOpt(ref Cursor cursor)
@@ -1686,7 +1692,7 @@ namespace
                     if (r3 != null)
                     {
                         r2 = this.ReturnHelper<bool>(startCursor2, ref cursor, state =>
-                            #line 22 "Grammar.peg"
+                            #line 25 "Grammar.peg"
                                            false
                             #line default
                             );
@@ -1704,7 +1710,7 @@ namespace
                     if (r4 != null)
                     {
                         r2 = this.ReturnHelper<bool>(startCursor3, ref cursor, state =>
-                            #line 22 "Grammar.peg"
+                            #line 25 "Grammar.peg"
                                                              true
                             #line default
                             );
@@ -1729,7 +1735,7 @@ namespace
             if (r1 != null)
             {
                 r0 = this.ReturnHelper<bool>(startCursor0, ref cursor, state =>
-                    #line 22 "Grammar.peg"
+                    #line 25 "Grammar.peg"
                                                                       distinct.Any()?distinct.Single():false
                     #line default
                     );
@@ -1742,7 +1748,7 @@ namespace
         }
 
         private IParseResult<
-            #line 23 "Grammar.peg"
+            #line 26 "Grammar.peg"
          IColumnListNode
             #line default
             > selList(ref Cursor cursor)
@@ -1760,7 +1766,7 @@ namespace
                 if (r1 != null)
                 {
                     r0 = this.ReturnHelper<IColumnListNode>(startCursor0, ref cursor, state =>
-                        #line 23 "Grammar.peg"
+                        #line 26 "Grammar.peg"
                                                    new AllColumnsListNode()
                         #line default
                         );
@@ -1774,7 +1780,7 @@ namespace
         }
 
         private IParseResult<
-            #line 24 "Grammar.peg"
+            #line 27 "Grammar.peg"
                 ColumnNameListNode
             #line default
             > columnItemList(ref Cursor cursor)
@@ -1791,17 +1797,50 @@ namespace
                 if (l0.Count > 0)
                 {
                     IParseResult<string> r2 = null;
-                    r2 = this.comma(ref cursor);
+                    var startCursor3 = cursor;
+                    IParseResult<IList<string>> r3 = null;
+                    r3 = this.ows(ref cursor);
+                    if (r3 != null)
+                    {
+                        IParseResult<string> r4 = null;
+                        r4 = this.comma(ref cursor);
+                        if (r4 != null)
+                        {
+                            IParseResult<IList<string>> r5 = null;
+                            r5 = this.ows(ref cursor);
+                            if (r5 != null)
+                            {
+                                {
+                                    var len = cursor.Location - startCursor3.Location;
+                                    r2 = this.ReturnHelper<string>(startCursor3, ref cursor, state =>
+                                        state.Subject.Substring(startCursor3.Location, len)
+                                        );
+                                }
+                            }
+                            else
+                            {
+                                cursor = startCursor3;
+                            }
+                        }
+                        else
+                        {
+                            cursor = startCursor3;
+                        }
+                    }
+                    else
+                    {
+                        cursor = startCursor3;
+                    }
                     if (r2 == null)
                     {
                         break;
                     }
                 }
-                IParseResult<string> r3 = null;
-                r3 = this.columnItem(ref cursor);
-                if (r3 != null)
+                IParseResult<string> r6 = null;
+                r6 = this.columnItem(ref cursor);
+                if (r6 != null)
                 {
-                    l0.Add(r3.Value);
+                    l0.Add(r6.Value);
                 }
                 else
                 {
@@ -1822,8 +1861,8 @@ namespace
             if (r1 != null)
             {
                 r0 = this.ReturnHelper<ColumnNameListNode>(startCursor0, ref cursor, state =>
-                    #line 24 "Grammar.peg"
-                                                                 new ColumnNameListNode{Ids= ids}
+                    #line 27 "Grammar.peg"
+                                                                         new ColumnNameListNode{Ids= ids}
                     #line default
                     );
             }
@@ -2621,7 +2660,7 @@ namespace
         }
 
         private IParseResult<
-            #line 40 "Grammar.peg"
+            #line 43 "Grammar.peg"
           ITableExpression
             #line default
             > exprList(ref Cursor cursor)
@@ -2666,7 +2705,7 @@ namespace
             if (r1 != null)
             {
                 r0 = this.ReturnHelper<ITableExpression>(startCursor0, ref cursor, state =>
-                    #line 40 "Grammar.peg"
+                    #line 43 "Grammar.peg"
                                                     new ExpressionList()
                     #line default
                     );
@@ -3225,7 +3264,7 @@ namespace
         }
 
         private IParseResult<
-            #line 52 "Grammar.peg"
+            #line 55 "Grammar.peg"
          IExpression
             #line default
             > funArgs(ref Cursor cursor)
@@ -3315,7 +3354,7 @@ namespace
         }
 
         private IParseResult<
-            #line 60 "Grammar.peg"
+            #line 63 "Grammar.peg"
            string
             #line default
             > Id_simple(ref Cursor cursor)
@@ -3325,7 +3364,7 @@ namespace
             {
                 var startCursor0 = cursor;
                 IParseResult<
-                    #line 60 "Grammar.peg"
+                    #line 63 "Grammar.peg"
                        string
                     #line default
                     > r1 = null;
