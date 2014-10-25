@@ -1298,6 +1298,7 @@ namespace
                         if (r3 != null)
                         {
                             IParseResult<IList<WhereClauseNode>> r5 = null;
+                            var whereStart = cursor;
                             var startCursor2 = cursor;
                             var l1 = new List<WhereClauseNode>();
                             while (l1.Count < 1)
@@ -1314,6 +1315,8 @@ namespace
                                 }
                             }
                             r5 = this.ReturnHelper<IList<WhereClauseNode>>(startCursor2, ref cursor, state => l1.AsReadOnly());
+                            var whereEnd = cursor;
+                            var where = ValueOrDefault(r5);
                             if (r5 != null)
                             {
                                 IParseResult<IList<string>> r7 = null;
@@ -1375,7 +1378,7 @@ namespace
                                         {
                                             r0 = this.ReturnHelper<SelectStatementNode>(startCursor0, ref cursor, state =>
                                                 #line 21 "Grammar.peg"
-  new SelectStatementNode{SelectClause=select, FromClause=from.SingleOrDefault()}
+  new SelectStatementNode{SelectClause=select, FromClause=from.SingleOrDefault(), WhereClause=where.SingleOrDefault()}
                                                 #line default
                                                 );
                                         }
@@ -1425,6 +1428,7 @@ namespace
                 if (r13 != null)
                 {
                     IParseResult<IList<WhereClauseNode>> r14 = null;
+                    var whereStart = cursor;
                     var startCursor7 = cursor;
                     var l5 = new List<WhereClauseNode>();
                     while (l5.Count < 1)
@@ -1441,6 +1445,8 @@ namespace
                         }
                     }
                     r14 = this.ReturnHelper<IList<WhereClauseNode>>(startCursor7, ref cursor, state => l5.AsReadOnly());
+                    var whereEnd = cursor;
+                    var where = ValueOrDefault(r14);
                     if (r14 != null)
                     {
                         IParseResult<IList<string>> r16 = null;
@@ -1509,7 +1515,7 @@ namespace
                                     {
                                         r0 = this.ReturnHelper<SelectStatementNode>(startCursor6, ref cursor, state =>
                                             #line 23 "Grammar.peg"
-  new SelectStatementNode{SelectClause=select, FromClause=from}
+  new SelectStatementNode{SelectClause=select, FromClause=from, WhereClause=where.SingleOrDefault()}
                                             #line default
                                             );
                                     }

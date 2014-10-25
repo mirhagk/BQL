@@ -10,6 +10,7 @@ namespace BQLPEG.Nodes
     {
         public SelectClauseNode SelectClause { get; set; }
         public FromClauseNode FromClause { get; set; }
+        public WhereClauseNode WhereClause { get; set; }
     }
     class FromClauseNode :Node
     {
