@@ -11,7 +11,7 @@ createTableStmt <CreateTableNode> = CREATE ows TABLE ows id:Id ows "(" ows field
 tableDefList = (<ITableDefNode> fieldDef / constraintDef)<1,,(ows comma ows)>
 fieldDef <FieldNode> = id:Id ows type:typeName ows typeParams:typeParams? ows nullval:nullOpt {new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=nullval}}
 typeName = "BIT" / "DATE" / "TIME" / "TIMESTAMP" / "DECIMAL" / "REAL" / "FLOAT" / "SMALLINT" / "INTEGER" / "INTERVAL" / "CHARACTER" / "DATETIME" / "INT" / "DOUBLE" / "CHAR" / "NCHAR" / "VARCHAR" / "NVARCHAR" / "IMAGE" / "TEXT" / "NTEXT"
-typeParams <IEnumerable<int>> = "(" ows num:number ows ")" { new int[]{int.Parse(num)}}/ "(" ows num1:number ows comma ows num2:number ")" {new int[]{int.Parse(num1),int.Parse(num2)}}
+typeParams <IEnumerable<decimal>> = "(" ows num:number ows ")" { new decimal[]{num}}/ "(" ows num1:number ows comma ows num2:number ")" {new decimal[]{num1,num2}}
 nullOpt <bool> = val:(<bool>NULL {true}/ NOT ows NULL{false})? {val.Any()?val.Single():true} 
 constraintDef <ConstraintNode> = CONSTRAINT ws id:Id ws constraintType:constraintTypeOpt {new ConstraintNode{ Name=id, ConstraintType=constraintType}}
 constraintTypeOpt <ConstraintTypeNode> = PRIMARY KEY ids:idlistPar {new PKConstraintTypeNode{Ids=ids}}/ UNIQUE ows ids:idlistPar {new UKConstraintTypeNode{Ids=ids}} / NOT NULL ids:idlistPar {new NotNullConstraintTypeNode{Ids=ids}}/ "FOREIGN" KEY localIds:idlistPar "REFERENCES" foreignTable:Id foreignIds:idlistPar { new FKConstraintTypeNode{LocalIds=localIds, ForeignTable=foreignTable, ForeignIds=foreignIds}}
@@ -28,12 +28,12 @@ columnItemList <ColumnNameListNode> = ids:columnItem<1,,ows comma ows> { new Col
 columnItem = projectionRef / columnSource (AS? Id)?
 columnSource = aggregate / Id
 aggregate = aggregateName "(" aggregateArg ")"
-aggregateArg = expression / "*"
+aggregateArg <IExpression> = expression / "*"{new AllColumnsListNode()}
 aggregateName = COUNT / "AVG" / "MIN" / "MAX" / "STDEV" / "STDEVP" / "SUM" / "VAR" / "VARP"
 fromClause <FromClauseNode> = FROM ows ids:idlist ows joinChain? {new FromClauseNode{TableIds=ids}}
 joinChain = joinKind? JOIN idlist ON Id "=" Id
 joinKind = "INNER" / "LEFT" "OUTER"? / "RIGHT" "OUTER"?
-whereClause = "WHERE" expression
+whereClause <WhereClauseNode> = "WHERE" ows expr:expression {new WhereClauseNode{Expression=expr}}
 groupClause = "GROUP" BY idlist
 havingClause = "HAVING" expression
 orderClause = "ORDER" BY orderList
@@ -41,8 +41,8 @@ projectionRef = "<" Id_simple ">" / Id_simple dot "<" Id_simple ">"
 orderList = orderMember<1,,comma>
 orderMember = Id ("ASC"/"DESC")?
 exprList <ITableExpression> = expression<1,,comma> {new ExpressionList()}
-expression -memoize = term / unExpr / binExpr // | betweenExpr // BETWEEN doesn't work - yet; 
-term = Id / string_literal / number / funCall / tuple / parSelectStmt
+expression <IExpression> -memoize = term // unExpr / binExpr // | betweenExpr // BETWEEN doesn't work - yet; 
+term <IExpression> = id:Id {new IdExpression{Id=id}}/ stringLiteral:string_literal {new StringLiteralExpression{Literal=stringLiteral}}/ num:number {new NumberLiteralExpression{Literal=num}}// funCall / tuple / parSelectStmt
 tuple = "(" exprList ")"
 parSelectStmt = "(" selectStmt ")"
 unExpr = unOp term
@@ -61,7 +61,7 @@ inStmt = expression "IN" "(" exprList ")"
 dot = "."
 comma = ","
 Id_simple <string> = (<string>)([A-Z_]+) / "[" [A-Z_]* "]" / ["] [A-Z_]* ["]
-number = [0-9]+ "."? [0-9]*
+number <decimal> = value:([0-9]+ "."? [0-9]*) {decimal.Parse(value)}
 string_literal = "'" ([^'] / '') "'"
 ws = [ \t\n\r]
 ows = ws*

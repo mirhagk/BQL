@@ -24,9 +24,13 @@ namespace BQLPEG.Nodes
     interface IColumnListNode{
 
     }
+    class WhereClauseNode :Node
+    {
+        public IExpression Expression { get; set; }
+    }
     class ColumnNameListNode:IColumnListNode
     {
         public IEnumerable<string> Ids { get; set; }
     }
-    class AllColumnsListNode : IColumnListNode { }
+    class AllColumnsListNode : IColumnListNode, IExpression { }
 }

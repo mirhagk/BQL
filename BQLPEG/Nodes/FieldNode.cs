@@ -7,7 +7,7 @@ namespace BQLPEG.Nodes
     {
         public string Name { get; set; }
         public string Type { get; set; }
-        public IEnumerable<int> TypeParams { get; set; }
+        public IEnumerable<decimal> TypeParams { get; set; }
         public bool Nullable { get; set; }
     }
 }

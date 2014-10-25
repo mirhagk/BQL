@@ -12,4 +12,16 @@ namespace BQLPEG.Nodes
     {
         public IEnumerable<IExpression> Expressions { get; set; }
     }
+    class StringLiteralExpression :Node, IExpression
+    {
+        public string Literal { get; set; }
+    }
+    class NumberLiteralExpression : Node,IExpression
+    {
+        public decimal Literal { get; set; }
+    }
+    class IdExpression : Node, IExpression
+    {
+        public string Id { get; set; }
+    }
 }
