@@ -1,9 +1,74 @@
-Clock = Hours Separator Minutes [Separator Seconds]; #Seconds optional.
+Root = stmtList;
 
-Hours = (%x30-31 %x30-39) / (%x32 %x30-33);
+stmtLine = stmt [";"];
 
-Minutes = %x30-35 %x30-39;
+stmtList = stmtLine;
 
-Seconds = %x30-35 %x30-39;
+id = idSimple *("." idSimple);
 
-Separator = ":";
+stmt = createTableStmt / "GO" ;
+
+createTableStmt = CREATE TABLE id "(" tableDefList ")";
+
+tableDefList = (fieldDef / constraintDef) *("," (fieldDef / constraintDef));
+
+fieldDef = id typeName [typeParams] nullOpt;
+
+typeName = "BIT" / "DATE" / "TIME" / "TIMESTAMP" / "DECIMAL" / "REAL" / "FLOAT" / "SMALLINT" / "INTEGER" / "INTERVAL" / "CHARACTER" / "DATETIME" / "INT" / "DOUBLE" / "CHAR" / "NCHAR" / "VARCHAR" / "NVARCHAR" / "IMAGE" / "TEXT" / "NTEXT";
+
+typeParams = "(" number ["," number] ")";
+
+nullOpt = [NULL / NOT NULL];
+
+constraintDef = CONSTRAINT id constraintType constraintTypeOpt;
+
+constraintTypeOpt = PRIMARY KEY idListPar / UNIQUE idListPar / NOT NULL idListPar / FOREIGN KEY idListPar REFERENCES id idListPar;
+
+idListPar = "(" idList ")";
+
+idList = id *("," id);
+
+##Filler Non-terminals
+
+constraintType = "CONSTRAINT";
+
+## Terminals
+
+dot = ".";
+comma = ",";
+idSimple = *(%x41-5A / %x61-7A);
+number = *%x30-39;
+
+
+## Keywords
+
+CREATE = "CREATE";
+TABLE = "TABLE";
+NULL = "NULL";
+NOT = "NOT";
+CONSTRAINT = "CONSTRAINT";
+PRIMARY = "PRIMARY";
+KEY = "KEY";
+UNIQUE = "UNIQUE";
+INDEX = "INDEX";
+ON = "ON";
+WITH = "WITH";
+ALTER = "ALTER";
+ADD = "ADD";
+COLUMN = "COLUMN";
+DROP = "DROP";
+INSERT = "INSERT";
+INTO = "INTO";
+VALUES = "VALUES";
+UPDATE = "UPDATE";
+SET = "SET";
+DELETE = "DELETE";
+FROM = "FROM";
+SELECT = "SELECT";
+AS = "AS";
+COUNT = "COUNT";
+JOIN = "JOIN";
+BY = "BY";
+PROJECTION = "PROJECTION";
+REFERENCES = "REFERENCES";
+FOREIGN = "FOREIGN";

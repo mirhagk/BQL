@@ -1,9 +1,9 @@
 /* -----------------------------------------------------------------------------
- * Rule_Seconds.cs
+ * Rule_CONSTRAINT.cs
  * -----------------------------------------------------------------------------
  *
  * Producer : com.parse2.aparse.Parser 2.5
- * Produced : Thu Feb 26 09:06:27 EST 2015
+ * Produced : Thu Feb 26 09:51:29 EST 2015
  *
  * -----------------------------------------------------------------------------
  */
@@ -11,9 +11,9 @@
 using System;
 using System.Collections.Generic;
 
-sealed public class Rule_Seconds:Rule
+sealed public class Rule_CONSTRAINT:Rule
 {
-  private Rule_Seconds(String spelling, List<Rule> rules) :
+  private Rule_CONSTRAINT(String spelling, List<Rule> rules) :
   base(spelling, rules)
   {
   }
@@ -23,9 +23,9 @@ sealed public class Rule_Seconds:Rule
     return visitor.Visit(this);
   }
 
-  public static Rule_Seconds Parse(ParserContext context)
+  public static Rule_CONSTRAINT Parse(ParserContext context)
   {
-    context.Push("Seconds");
+    context.Push("CONSTRAINT");
 
     Rule rule;
     bool parsed = true;
@@ -45,22 +45,7 @@ sealed public class Rule_Seconds:Rule
         int c1 = 0;
         for (int i1 = 0; i1 < 1 && f1; i1++)
         {
-          rule = Terminal_NumericValue.Parse(context, "%x30-35", "[\\x30-\\x35]", 1);
-          if ((f1 = rule != null))
-          {
-            a1.Add(rule, context.index);
-            c1++;
-          }
-        }
-        parsed = c1 == 1;
-      }
-      if (parsed)
-      {
-        bool f1 = true;
-        int c1 = 0;
-        for (int i1 = 0; i1 < 1 && f1; i1++)
-        {
-          rule = Terminal_NumericValue.Parse(context, "%x30-39", "[\\x30-\\x39]", 1);
+          rule = Terminal_StringValue.Parse(context, "CONSTRAINT");
           if ((f1 = rule != null))
           {
             a1.Add(rule, context.index);
@@ -89,16 +74,16 @@ sealed public class Rule_Seconds:Rule
     rule = null;
     if (parsed)
     {
-        rule = new Rule_Seconds(context.text.Substring(a0.start, a0.end - a0.start), a0.rules);
+        rule = new Rule_CONSTRAINT(context.text.Substring(a0.start, a0.end - a0.start), a0.rules);
     }
     else
     {
         context.index = s0;
     }
 
-    context.Pop("Seconds", parsed);
+    context.Pop("CONSTRAINT", parsed);
 
-    return (Rule_Seconds)rule;
+    return (Rule_CONSTRAINT)rule;
   }
 }
 

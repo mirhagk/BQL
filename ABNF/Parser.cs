@@ -3,7 +3,7 @@
  * -----------------------------------------------------------------------------
  *
  * Producer : com.parse2.aparse.Parser 2.5
- * Produced : Wed Feb 25 22:32:20 EST 2015
+ * Produced : Thu Feb 26 09:51:29 EST 2015
  *
  * -----------------------------------------------------------------------------
  */
@@ -26,7 +26,7 @@ public class Parser
     if (ok)
     {
       arguments["Trace"] = "Off";
-      arguments["Rule"] = "Clock";
+      arguments["Rule"] = "Root";
 
       for (int i = 0; i < args.Length; i++)
       {
@@ -148,11 +148,56 @@ public class Parser
     ParserContext context = new ParserContext(text, trace);
 
     Rule rule = null;
-    if (rulename.ToLower().Equals("Clock".ToLower())) rule = Rule_Clock.Parse(context);
-    else if (rulename.ToLower().Equals("Hours".ToLower())) rule = Rule_Hours.Parse(context);
-    else if (rulename.ToLower().Equals("Minutes".ToLower())) rule = Rule_Minutes.Parse(context);
-    else if (rulename.ToLower().Equals("Seconds".ToLower())) rule = Rule_Seconds.Parse(context);
-    else if (rulename.ToLower().Equals("Separator".ToLower())) rule = Rule_Separator.Parse(context);
+    if (rulename.ToLower().Equals("Root".ToLower())) rule = Rule_Root.Parse(context);
+    else if (rulename.ToLower().Equals("stmtLine".ToLower())) rule = Rule_stmtLine.Parse(context);
+    else if (rulename.ToLower().Equals("stmtList".ToLower())) rule = Rule_stmtList.Parse(context);
+    else if (rulename.ToLower().Equals("id".ToLower())) rule = Rule_id.Parse(context);
+    else if (rulename.ToLower().Equals("stmt".ToLower())) rule = Rule_stmt.Parse(context);
+    else if (rulename.ToLower().Equals("createTableStmt".ToLower())) rule = Rule_createTableStmt.Parse(context);
+    else if (rulename.ToLower().Equals("tableDefList".ToLower())) rule = Rule_tableDefList.Parse(context);
+    else if (rulename.ToLower().Equals("fieldDef".ToLower())) rule = Rule_fieldDef.Parse(context);
+    else if (rulename.ToLower().Equals("typeName".ToLower())) rule = Rule_typeName.Parse(context);
+    else if (rulename.ToLower().Equals("typeParams".ToLower())) rule = Rule_typeParams.Parse(context);
+    else if (rulename.ToLower().Equals("nullOpt".ToLower())) rule = Rule_nullOpt.Parse(context);
+    else if (rulename.ToLower().Equals("constraintDef".ToLower())) rule = Rule_constraintDef.Parse(context);
+    else if (rulename.ToLower().Equals("constraintTypeOpt".ToLower())) rule = Rule_constraintTypeOpt.Parse(context);
+    else if (rulename.ToLower().Equals("idListPar".ToLower())) rule = Rule_idListPar.Parse(context);
+    else if (rulename.ToLower().Equals("idList".ToLower())) rule = Rule_idList.Parse(context);
+    else if (rulename.ToLower().Equals("constraintType".ToLower())) rule = Rule_constraintType.Parse(context);
+    else if (rulename.ToLower().Equals("dot".ToLower())) rule = Rule_dot.Parse(context);
+    else if (rulename.ToLower().Equals("comma".ToLower())) rule = Rule_comma.Parse(context);
+    else if (rulename.ToLower().Equals("idSimple".ToLower())) rule = Rule_idSimple.Parse(context);
+    else if (rulename.ToLower().Equals("number".ToLower())) rule = Rule_number.Parse(context);
+    else if (rulename.ToLower().Equals("CREATE".ToLower())) rule = Rule_CREATE.Parse(context);
+    else if (rulename.ToLower().Equals("TABLE".ToLower())) rule = Rule_TABLE.Parse(context);
+    else if (rulename.ToLower().Equals("NULL".ToLower())) rule = Rule_NULL.Parse(context);
+    else if (rulename.ToLower().Equals("NOT".ToLower())) rule = Rule_NOT.Parse(context);
+    else if (rulename.ToLower().Equals("CONSTRAINT".ToLower())) rule = Rule_CONSTRAINT.Parse(context);
+    else if (rulename.ToLower().Equals("PRIMARY".ToLower())) rule = Rule_PRIMARY.Parse(context);
+    else if (rulename.ToLower().Equals("KEY".ToLower())) rule = Rule_KEY.Parse(context);
+    else if (rulename.ToLower().Equals("UNIQUE".ToLower())) rule = Rule_UNIQUE.Parse(context);
+    else if (rulename.ToLower().Equals("INDEX".ToLower())) rule = Rule_INDEX.Parse(context);
+    else if (rulename.ToLower().Equals("ON".ToLower())) rule = Rule_ON.Parse(context);
+    else if (rulename.ToLower().Equals("WITH".ToLower())) rule = Rule_WITH.Parse(context);
+    else if (rulename.ToLower().Equals("ALTER".ToLower())) rule = Rule_ALTER.Parse(context);
+    else if (rulename.ToLower().Equals("ADD".ToLower())) rule = Rule_ADD.Parse(context);
+    else if (rulename.ToLower().Equals("COLUMN".ToLower())) rule = Rule_COLUMN.Parse(context);
+    else if (rulename.ToLower().Equals("DROP".ToLower())) rule = Rule_DROP.Parse(context);
+    else if (rulename.ToLower().Equals("INSERT".ToLower())) rule = Rule_INSERT.Parse(context);
+    else if (rulename.ToLower().Equals("INTO".ToLower())) rule = Rule_INTO.Parse(context);
+    else if (rulename.ToLower().Equals("VALUES".ToLower())) rule = Rule_VALUES.Parse(context);
+    else if (rulename.ToLower().Equals("UPDATE".ToLower())) rule = Rule_UPDATE.Parse(context);
+    else if (rulename.ToLower().Equals("SET".ToLower())) rule = Rule_SET.Parse(context);
+    else if (rulename.ToLower().Equals("DELETE".ToLower())) rule = Rule_DELETE.Parse(context);
+    else if (rulename.ToLower().Equals("FROM".ToLower())) rule = Rule_FROM.Parse(context);
+    else if (rulename.ToLower().Equals("SELECT".ToLower())) rule = Rule_SELECT.Parse(context);
+    else if (rulename.ToLower().Equals("AS".ToLower())) rule = Rule_AS.Parse(context);
+    else if (rulename.ToLower().Equals("COUNT".ToLower())) rule = Rule_COUNT.Parse(context);
+    else if (rulename.ToLower().Equals("JOIN".ToLower())) rule = Rule_JOIN.Parse(context);
+    else if (rulename.ToLower().Equals("BY".ToLower())) rule = Rule_BY.Parse(context);
+    else if (rulename.ToLower().Equals("PROJECTION".ToLower())) rule = Rule_PROJECTION.Parse(context);
+    else if (rulename.ToLower().Equals("REFERENCES".ToLower())) rule = Rule_REFERENCES.Parse(context);
+    else if (rulename.ToLower().Equals("FOREIGN".ToLower())) rule = Rule_FOREIGN.Parse(context);
     else throw new ArgumentException("unknown rule");
 
     if (rule == null)
