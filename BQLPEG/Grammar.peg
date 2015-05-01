@@ -2,40 +2,16 @@
 @using BQLPEG.Nodes
 @using System.Linq
 @classname Grammar
+
+//General setup
 Root = stmtList
 stmtLine <StatementNode> = stmt:stmt ";"? {stmt}
 stmtList <IEnumerable<StatementNode>> = stmtLine+
-Id <string> = id:Id_simple<1,,dot> { string.Concat(id)}
-stmt <StatementNode> = createTableStmt / ("GO" {new GoStatementNode()}) / selectStmt 
-createTableStmt <CreateTableNode> = CREATE ows TABLE ows id:Id ows "(" ows fields:tableDefList ows ")" {new CreateTableNode{Name=id, Fields=fields.Where(f=>f is FieldNode).Cast<FieldNode>(), Constraints=fields.Where(f=>f is ConstraintNode).Cast<ConstraintNode>()}}
-tableDefList = (<ITableDefNode> fieldDef / constraintDef)<1,,(ows comma ows)>
-fieldDef <FieldNode> = id:Id ows type:typeName ows typeParams:typeParams? ows nullval:nullOpt {new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=nullval}}
-typeName = "BIT" / "DATE" / "TIME" / "TIMESTAMP" / "DECIMAL" / "REAL" / "FLOAT" / "SMALLINT" / "INTEGER" / "INTERVAL" / "CHARACTER" / "DATETIME" / "INT" / "DOUBLE" / "CHAR" / "NCHAR" / "VARCHAR" / "NVARCHAR" / "IMAGE" / "TEXT" / "NTEXT"
-typeParams <IEnumerable<int>> = "(" ows num:number ows ")" { new int[]{int.Parse(num)}}/ "(" ows num1:number ows comma ows num2:number ")" {new int[]{int.Parse(num1),int.Parse(num2)}}
-nullOpt <bool> = val:(<bool>NULL {true}/ NOT ows NULL{false})? {val.Any()?val.Single():true} 
-constraintDef <ConstraintNode> = CONSTRAINT ws id:Id ws constraintType:constraintTypeOpt {new ConstraintNode{ Name=id, ConstraintType=constraintType}}
-constraintTypeOpt <ConstraintTypeNode> = PRIMARY KEY ids:idlistPar {new PKConstraintTypeNode{Ids=ids}}/ UNIQUE ows ids:idlistPar {new UKConstraintTypeNode{Ids=ids}} / NOT NULL ids:idlistPar {new NotNullConstraintTypeNode{Ids=ids}}/ "FOREIGN" KEY localIds:idlistPar "REFERENCES" foreignTable:Id foreignIds:idlistPar { new FKConstraintTypeNode{LocalIds=localIds, ForeignTable=foreignTable, ForeignIds=foreignIds}}
-idlistPar <IList<string>> = "(" ids:idlist ")" {ids}
-idlist = Id<1,,comma>
-selectStmt = selectClause fromClause? whereClause? groupClause? havingClause? orderClause? / fromClause whereClause? groupClause?  havingClause? orderClause? selectClause
-selectClause = SELECT ("ALL"/"DISTINCT")? selList (INTO Id)?
-selList <IColumnListNode> = columnItemList / ("*" {new AllColumnsListNode()})
-columnItemList <ColumnNameListNode> = ids:columnItem<1,,comma> { new ColumnNameListNode{Ids= ids}}
-columnItem = projectionRef / columnSource (AS? Id)?
-columnSource = aggregate / Id
-aggregate = aggregateName "(" aggregateArg ")"
-aggregateArg = expression / "*"
-aggregateName = COUNT / "AVG" / "MIN" / "MAX" / "STDEV" / "STDEVP" / "SUM" / "VAR" / "VARP"
-fromClause = FROM idlist joinChain?
-joinChain = joinKind? JOIN idlist ON Id "=" Id
-joinKind = "INNER" / "LEFT" "OUTER"? / "RIGHT" "OUTER"?
-whereClause = "WHERE" expression
-groupClause = "GROUP" BY idlist
-havingClause = "HAVING" expression
-orderClause = "ORDER" BY orderList
-projectionRef = "<" Id_simple ">" / Id_simple dot "<" Id_simple ">"
-orderList = orderMember<1,,comma>
-orderMember = Id ("ASC"/"DESC")?
+
+//This is all the statment types
+stmt <StatementNode> = createTableStmt / ("GO" {new GoStatementNode()}) / selectStmt
+
+//EXPRESSIONS
 exprList = expression<1,,comma>
 expression -memoize = term / unExpr / binExpr // | betweenExpr // BETWEEN doesn't work - yet; 
 term = Id / string_literal / number / funCall / tuple / parSelectStmt
@@ -50,6 +26,49 @@ betweenExpr = expression NOT? "BETWEEN" expression "AND" expression
 funCall = Id "(" funArgs ")"
 funArgs = selectStmt / exprList
 inStmt = expression "IN" "(" exprList ")"
+
+//General non-terminals
+Id <string> = id:Id_simple<1,,dot> { string.Concat(id)}
+idlistPar <IList<string>> = "(" ids:idlist ")" {ids}
+idlist = Id<1,,comma>
+typeName = "BIT" / "DATE" / "TIME" / "TIMESTAMP" / "DECIMAL" / "REAL" / "FLOAT" / "SMALLINT" / "INTEGER" / "INTERVAL" / "CHARACTER" / "DATETIME" / "INT" / "DOUBLE" / "CHAR" / "NCHAR" / "VARCHAR" / "NVARCHAR" / "IMAGE" / "TEXT" / "NTEXT"
+nullOpt <bool> = val:(<bool>NULL {true}/ NOT ows NULL{false})? {val.Any()?val.Single():true}
+
+//QUERY
+selectStmt = selectClause fromClause? whereClause? groupClause? havingClause? orderClause? / fromClause whereClause? groupClause?  havingClause? orderClause? selectClause
+
+//SELECT
+selectClause = SELECT ("ALL"/"DISTINCT")? selList (INTO Id)?
+selList <IColumnListNode> = columnItemList / ("*" {new AllColumnsListNode()})
+columnItemList <ColumnNameListNode> = ids:columnItem<1,,comma> { new ColumnNameListNode{Ids= ids}}
+columnItem = projectionRef / columnSource (AS? Id)?
+columnSource = aggregate / Id
+projectionRef = "<" Id_simple ">" / Id_simple dot "<" Id_simple ">"
+aggregate = aggregateName "(" aggregateArg ")"
+aggregateArg = expression / "*"
+aggregateName = COUNT / "AVG" / "MIN" / "MAX" / "STDEV" / "STDEVP" / "SUM" / "VAR" / "VARP"
+
+//FROM
+fromClause = FROM idlist joinChain?
+joinChain = joinKind? JOIN idlist ON Id "=" Id
+joinKind = "INNER" / "LEFT" "OUTER"? / "RIGHT" "OUTER"?
+
+//WHERE, GROUP, HAVING, ORDER
+whereClause = "WHERE" expression
+groupClause = "GROUP" BY idlist
+havingClause = "HAVING" expression
+orderClause = "ORDER" BY orderList
+orderList = orderMember<1,,comma>
+orderMember = Id ("ASC"/"DESC")?
+
+
+//CREATE TABLE
+createTableStmt <CreateTableNode> = CREATE ows TABLE ows id:Id ows "(" ows fields:tableDefList ows ")" {new CreateTableNode{Name=id, Fields=fields.Where(f=>f is FieldNode).Cast<FieldNode>(), Constraints=fields.Where(f=>f is ConstraintNode).Cast<ConstraintNode>()}}
+tableDefList = (<ITableDefNode> fieldDef / constraintDef)<1,,(ows comma ows)>
+fieldDef <FieldNode> = id:Id ows type:typeName ows typeParams:typeParams? ows nullval:nullOpt {new FieldNode{Name=id, Type=type, TypeParams=typeParams.SingleOrDefault(), Nullable=nullval}}
+typeParams <IEnumerable<int>> = "(" ows num:number ows ")" { new int[]{int.Parse(num)}}/ "(" ows num1:number ows comma ows num2:number ")" {new int[]{int.Parse(num1),int.Parse(num2)}}
+constraintDef <ConstraintNode> = CONSTRAINT ws id:Id ws constraintType:constraintTypeOpt {new ConstraintNode{ Name=id, ConstraintType=constraintType}}
+constraintTypeOpt <ConstraintTypeNode> = PRIMARY KEY ids:idlistPar {new PKConstraintTypeNode{Ids=ids}}/ UNIQUE ows ids:idlistPar {new UKConstraintTypeNode{Ids=ids}} / NOT NULL ids:idlistPar {new NotNullConstraintTypeNode{Ids=ids}}/ "FOREIGN" KEY localIds:idlistPar "REFERENCES" foreignTable:Id foreignIds:idlistPar { new FKConstraintTypeNode{LocalIds=localIds, ForeignTable=foreignTable, ForeignIds=foreignIds}}
 
 
 
