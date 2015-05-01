@@ -66,30 +66,9 @@ namespace BQLPEG
             }
             Console.WriteLine("All tests concluded, passed {0} out of {1}", passed, total);
         }
-        static string testSQL = @"CREATE TABLE Test ( a INT NOT NULL, b INT NULL, c NVARCHAR(50))";
         static void Main(string[] args)
         {
             RunAllTests();
-            Console.ReadKey();
-            return;
-            testSQL = testSQL.ToUpper();
-            var grammar = new Grammar();
-            var generator = new SQLGenerator();
-            Console.WriteLine(testSQL);
-            IEnumerable<Nodes.StatementNode> parseResult = null;
-            try
-            {
-                parseResult = grammar.Parse(testSQL);
-            }
-            catch
-            {
-                Console.WriteLine("Failed to parse");
-            }
-            if (parseResult != null)
-            {
-                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parseResult));
-                Console.WriteLine(generator.GenerateSQL(parseResult));
-            }
             Console.ReadKey();
         }
     }
