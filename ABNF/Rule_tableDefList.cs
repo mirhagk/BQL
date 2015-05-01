@@ -1,9 +1,9 @@
 /* -----------------------------------------------------------------------------
- * Rule_Hours.cs
+ * Rule_tableDefList.cs
  * -----------------------------------------------------------------------------
  *
  * Producer : com.parse2.aparse.Parser 2.5
- * Produced : Thu Feb 26 09:06:27 EST 2015
+ * Produced : Thu Feb 26 09:51:29 EST 2015
  *
  * -----------------------------------------------------------------------------
  */
@@ -11,9 +11,9 @@
 using System;
 using System.Collections.Generic;
 
-sealed public class Rule_Hours:Rule
+sealed public class Rule_tableDefList:Rule
 {
-  private Rule_Hours(String spelling, List<Rule> rules) :
+  private Rule_tableDefList(String spelling, List<Rule> rules) :
   base(spelling, rules)
   {
   }
@@ -23,9 +23,9 @@ sealed public class Rule_Hours:Rule
     return visitor.Visit(this);
   }
 
-  public static Rule_Hours Parse(ParserContext context)
+  public static Rule_tableDefList Parse(ParserContext context)
   {
-    context.Push("Hours");
+    context.Push("tableDefList");
 
     Rule rule;
     bool parsed = true;
@@ -58,7 +58,7 @@ sealed public class Rule_Hours:Rule
               int c2 = 0;
               for (int i2 = 0; i2 < 1 && f2; i2++)
               {
-                rule = Terminal_NumericValue.Parse(context, "%x30-31", "[\\x30-\\x31]", 1);
+                rule = Rule_fieldDef.Parse(context);
                 if ((f2 = rule != null))
                 {
                   a2.Add(rule, context.index);
@@ -69,11 +69,21 @@ sealed public class Rule_Hours:Rule
             }
             if (parsed)
             {
+              as2.Add(a2);
+            }
+            context.index = s2;
+          }
+          {
+            int s2 = context.index;
+            ParserAlternative a2 = new ParserAlternative(s2);
+            parsed = true;
+            if (parsed)
+            {
               bool f2 = true;
               int c2 = 0;
               for (int i2 = 0; i2 < 1 && f2; i2++)
               {
-                rule = Terminal_NumericValue.Parse(context, "%x30-39", "[\\x30-\\x39]", 1);
+                rule = Rule_constraintDef.Parse(context);
                 if ((f2 = rule != null))
                 {
                   a2.Add(rule, context.index);
@@ -105,19 +115,9 @@ sealed public class Rule_Hours:Rule
       }
       if (parsed)
       {
-        as1.Add(a1);
-      }
-      context.index = s1;
-    }
-    {
-      int s1 = context.index;
-      ParserAlternative a1 = new ParserAlternative(s1);
-      parsed = true;
-      if (parsed)
-      {
         bool f1 = true;
         int c1 = 0;
-        for (int i1 = 0; i1 < 1 && f1; i1++)
+        while (f1)
         {
           int g1 = context.index;
           List<ParserAlternative> as2 = new List<ParserAlternative>();
@@ -132,7 +132,7 @@ sealed public class Rule_Hours:Rule
               int c2 = 0;
               for (int i2 = 0; i2 < 1 && f2; i2++)
               {
-                rule = Terminal_NumericValue.Parse(context, "%x32", "[\\x32]", 1);
+                rule = Terminal_StringValue.Parse(context, ",");
                 if ((f2 = rule != null))
                 {
                   a2.Add(rule, context.index);
@@ -147,12 +147,71 @@ sealed public class Rule_Hours:Rule
               int c2 = 0;
               for (int i2 = 0; i2 < 1 && f2; i2++)
               {
-                rule = Terminal_NumericValue.Parse(context, "%x30-33", "[\\x30-\\x33]", 1);
-                if ((f2 = rule != null))
+                int g2 = context.index;
+                List<ParserAlternative> as3 = new List<ParserAlternative>();
+                parsed = false;
                 {
-                  a2.Add(rule, context.index);
-                  c2++;
+                  int s3 = context.index;
+                  ParserAlternative a3 = new ParserAlternative(s3);
+                  parsed = true;
+                  if (parsed)
+                  {
+                    bool f3 = true;
+                    int c3 = 0;
+                    for (int i3 = 0; i3 < 1 && f3; i3++)
+                    {
+                      rule = Rule_fieldDef.Parse(context);
+                      if ((f3 = rule != null))
+                      {
+                        a3.Add(rule, context.index);
+                        c3++;
+                      }
+                    }
+                    parsed = c3 == 1;
+                  }
+                  if (parsed)
+                  {
+                    as3.Add(a3);
+                  }
+                  context.index = s3;
                 }
+                {
+                  int s3 = context.index;
+                  ParserAlternative a3 = new ParserAlternative(s3);
+                  parsed = true;
+                  if (parsed)
+                  {
+                    bool f3 = true;
+                    int c3 = 0;
+                    for (int i3 = 0; i3 < 1 && f3; i3++)
+                    {
+                      rule = Rule_constraintDef.Parse(context);
+                      if ((f3 = rule != null))
+                      {
+                        a3.Add(rule, context.index);
+                        c3++;
+                      }
+                    }
+                    parsed = c3 == 1;
+                  }
+                  if (parsed)
+                  {
+                    as3.Add(a3);
+                  }
+                  context.index = s3;
+                }
+
+                b = ParserAlternative.GetBest(as3);
+
+                parsed = b != null;
+
+                if (parsed)
+                {
+                  a2.Add(b.rules, b.end);
+                  context.index = b.end;
+                }
+                f2 = context.index > g2;
+                if (parsed) c2++;
               }
               parsed = c2 == 1;
             }
@@ -175,7 +234,7 @@ sealed public class Rule_Hours:Rule
           f1 = context.index > g1;
           if (parsed) c1++;
         }
-        parsed = c1 == 1;
+        parsed = true;
       }
       if (parsed)
       {
@@ -197,16 +256,16 @@ sealed public class Rule_Hours:Rule
     rule = null;
     if (parsed)
     {
-        rule = new Rule_Hours(context.text.Substring(a0.start, a0.end - a0.start), a0.rules);
+        rule = new Rule_tableDefList(context.text.Substring(a0.start, a0.end - a0.start), a0.rules);
     }
     else
     {
         context.index = s0;
     }
 
-    context.Pop("Hours", parsed);
+    context.Pop("tableDefList", parsed);
 
-    return (Rule_Hours)rule;
+    return (Rule_tableDefList)rule;
   }
 }
 

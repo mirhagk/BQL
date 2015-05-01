@@ -1,9 +1,9 @@
 /* -----------------------------------------------------------------------------
- * Rule_Clock.cs
+ * Rule_typeParams.cs
  * -----------------------------------------------------------------------------
  *
  * Producer : com.parse2.aparse.Parser 2.5
- * Produced : Thu Feb 26 09:06:27 EST 2015
+ * Produced : Thu Feb 26 09:51:29 EST 2015
  *
  * -----------------------------------------------------------------------------
  */
@@ -11,9 +11,9 @@
 using System;
 using System.Collections.Generic;
 
-sealed public class Rule_Clock:Rule
+sealed public class Rule_typeParams:Rule
 {
-  private Rule_Clock(String spelling, List<Rule> rules) :
+  private Rule_typeParams(String spelling, List<Rule> rules) :
   base(spelling, rules)
   {
   }
@@ -23,9 +23,9 @@ sealed public class Rule_Clock:Rule
     return visitor.Visit(this);
   }
 
-  public static Rule_Clock Parse(ParserContext context)
+  public static Rule_typeParams Parse(ParserContext context)
   {
-    context.Push("Clock");
+    context.Push("typeParams");
 
     Rule rule;
     bool parsed = true;
@@ -45,7 +45,7 @@ sealed public class Rule_Clock:Rule
         int c1 = 0;
         for (int i1 = 0; i1 < 1 && f1; i1++)
         {
-          rule = Rule_Hours.Parse(context);
+          rule = Terminal_StringValue.Parse(context, "(");
           if ((f1 = rule != null))
           {
             a1.Add(rule, context.index);
@@ -60,22 +60,7 @@ sealed public class Rule_Clock:Rule
         int c1 = 0;
         for (int i1 = 0; i1 < 1 && f1; i1++)
         {
-          rule = Rule_Separator.Parse(context);
-          if ((f1 = rule != null))
-          {
-            a1.Add(rule, context.index);
-            c1++;
-          }
-        }
-        parsed = c1 == 1;
-      }
-      if (parsed)
-      {
-        bool f1 = true;
-        int c1 = 0;
-        for (int i1 = 0; i1 < 1 && f1; i1++)
-        {
-          rule = Rule_Minutes.Parse(context);
+          rule = Rule_number.Parse(context);
           if ((f1 = rule != null))
           {
             a1.Add(rule, context.index);
@@ -103,7 +88,7 @@ sealed public class Rule_Clock:Rule
               int c2 = 0;
               for (int i2 = 0; i2 < 1 && f2; i2++)
               {
-                rule = Rule_Separator.Parse(context);
+                rule = Terminal_StringValue.Parse(context, ",");
                 if ((f2 = rule != null))
                 {
                   a2.Add(rule, context.index);
@@ -118,7 +103,7 @@ sealed public class Rule_Clock:Rule
               int c2 = 0;
               for (int i2 = 0; i2 < 1 && f2; i2++)
               {
-                rule = Rule_Seconds.Parse(context);
+                rule = Rule_number.Parse(context);
                 if ((f2 = rule != null))
                 {
                   a2.Add(rule, context.index);
@@ -150,6 +135,21 @@ sealed public class Rule_Clock:Rule
       }
       if (parsed)
       {
+        bool f1 = true;
+        int c1 = 0;
+        for (int i1 = 0; i1 < 1 && f1; i1++)
+        {
+          rule = Terminal_StringValue.Parse(context, ")");
+          if ((f1 = rule != null))
+          {
+            a1.Add(rule, context.index);
+            c1++;
+          }
+        }
+        parsed = c1 == 1;
+      }
+      if (parsed)
+      {
         as1.Add(a1);
       }
       context.index = s1;
@@ -168,16 +168,16 @@ sealed public class Rule_Clock:Rule
     rule = null;
     if (parsed)
     {
-        rule = new Rule_Clock(context.text.Substring(a0.start, a0.end - a0.start), a0.rules);
+        rule = new Rule_typeParams(context.text.Substring(a0.start, a0.end - a0.start), a0.rules);
     }
     else
     {
         context.index = s0;
     }
 
-    context.Pop("Clock", parsed);
+    context.Pop("typeParams", parsed);
 
-    return (Rule_Clock)rule;
+    return (Rule_typeParams)rule;
   }
 }
 
