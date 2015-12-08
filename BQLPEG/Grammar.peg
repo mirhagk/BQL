@@ -24,7 +24,7 @@ binOp = "+" / "-" / "*" / "/" / "%" / "&" / "|" / "^" / "=" / ">" / "<" / ">=" /
 betweenExpr = expression NOT? "BETWEEN" expression "AND" expression
 // funCall covers some psedo-operators and special forms like ANY(...), SOME(...), ALL(...), EXISTS(...), IN(...)
 funCall = Id "(" funArgs ")"
-funArgs = selectStmt / exprList
+funArgs = selectStmt // exprList
 inStmt = expression "IN" "(" exprList ")"
 
 //General non-terminals
@@ -35,10 +35,11 @@ typeName = "BIT" / "DATE" / "TIME" / "TIMESTAMP" / "DECIMAL" / "REAL" / "FLOAT" 
 nullOpt <bool> = val:(<bool>NULL {true}/ NOT ows NULL{false})? {val.Any()?val.Single():true}
 
 //QUERY
-selectStmt = selectClause fromClause? whereClause? groupClause? havingClause? orderClause? / fromClause whereClause? groupClause?  havingClause? orderClause? selectClause
+selectStmt<SelectStatementNode> = select:selectClause fromClause? whereClause? groupClause? havingClause? orderClause? { new SelectStatementNode{Select=select}} 
+	/ fromClause whereClause? groupClause?  havingClause? orderClause? select:selectClause {new SelectStatementNode{Select=select}}
 
 //SELECT
-selectClause = SELECT ("ALL"/"DISTINCT")? selList (INTO Id)?
+selectClause<SelectNode> = SELECT isAll:("ALL"/"DISTINCT")? selList (INTO Id)? {new SelectNode{Distinct=(Flatten(isAll)=="DISTINCT")}}
 selList <IColumnListNode> = columnItemList / ("*" {new AllColumnsListNode()})
 columnItemList <ColumnNameListNode> = ids:columnItem<1,,comma> { new ColumnNameListNode{Ids= ids}}
 columnItem = projectionRef / columnSource (AS? Id)?

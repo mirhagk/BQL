@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace BQLPEG.Nodes
 {
+    class SelectStatementNode : StatementNode
+    {
+        public SelectNode Select { get; set; }
+    }
     class SelectNode:Node
     {
+        public bool Distinct { get; set; }
+        IColumnListNode ColumnList { get; set; }
     }
     interface IColumnListNode{
 
